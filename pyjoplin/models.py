@@ -1,13 +1,17 @@
 from peewee import *
+from playhouse.sqlite_ext import *
 
-database = SqliteDatabase('/home/jesus/.config/joplin/database.sqlite', **{})
+database = SqliteExtDatabase('/home/jesus/.config/joplin/database.sqlite', **{})
+
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
 
+
 class BaseModel(Model):
     class Meta:
         database = database
+
 
 class Alarms(BaseModel):
     note = TextField(column_name='note_id', index=True)
@@ -15,6 +19,7 @@ class Alarms(BaseModel):
 
     class Meta:
         table_name = 'alarms'
+
 
 class DeletedItems(BaseModel):
     deleted_time = IntegerField()
@@ -24,6 +29,7 @@ class DeletedItems(BaseModel):
 
     class Meta:
         table_name = 'deleted_items'
+
 
 class Folders(BaseModel):
     created_time = IntegerField()
@@ -39,6 +45,7 @@ class Folders(BaseModel):
     class Meta:
         table_name = 'folders'
 
+
 class ItemChanges(BaseModel):
     created_time = IntegerField(index=True)
     item = TextField(column_name='item_id', index=True)
@@ -47,6 +54,7 @@ class ItemChanges(BaseModel):
 
     class Meta:
         table_name = 'item_changes'
+
 
 class MasterKeys(BaseModel):
     checksum = TextField()
@@ -60,6 +68,7 @@ class MasterKeys(BaseModel):
     class Meta:
         table_name = 'master_keys'
 
+
 class NoteResources(BaseModel):
     is_associated = IntegerField()
     last_seen_time = IntegerField()
@@ -68,6 +77,7 @@ class NoteResources(BaseModel):
 
     class Meta:
         table_name = 'note_resources'
+
 
 class NoteTags(BaseModel):
     created_time = IntegerField()
@@ -82,6 +92,7 @@ class NoteTags(BaseModel):
 
     class Meta:
         table_name = 'note_tags'
+
 
 class Note(BaseModel):
     # altitude = UnknownField(constraints=[SQL("DEFAULT 0")])  # NUMERIC
@@ -111,6 +122,21 @@ class Note(BaseModel):
     class Meta:
         table_name = 'notes'
 
+
+class NoteIndex(FTSModel):
+    # Full-text search index.
+    rowid = RowIDField()
+    uid = TextField()
+    title = SearchField()
+    body = SearchField()
+
+    class Meta:
+        table_name = 'notes_index'
+        database = database
+        # Use the porter stemming algorithm to tokenize content.
+        options = {'tokenize': 'porter'}
+
+
 class Resources(BaseModel):
     created_time = IntegerField()
     encryption_applied = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
@@ -128,6 +154,7 @@ class Resources(BaseModel):
     class Meta:
         table_name = 'resources'
 
+
 class Settings(BaseModel):
     key = TextField(null=True, primary_key=True)
     value = TextField(null=True)
@@ -143,6 +170,7 @@ class Settings(BaseModel):
 #         table_name = 'sqlite_sequence'
 #         primary_key = False
 
+
 class SyncItems(BaseModel):
     force_sync = IntegerField(constraints=[SQL("DEFAULT 0")])
     item = TextField(column_name='item_id', index=True)
@@ -155,6 +183,7 @@ class SyncItems(BaseModel):
     class Meta:
         table_name = 'sync_items'
 
+
 class TableFields(BaseModel):
     field_default = TextField(null=True)
     field_name = TextField()
@@ -163,6 +192,7 @@ class TableFields(BaseModel):
 
     class Meta:
         table_name = 'table_fields'
+
 
 class Tags(BaseModel):
     created_time = IntegerField()
@@ -176,6 +206,7 @@ class Tags(BaseModel):
 
     class Meta:
         table_name = 'tags'
+
 
 class Version(BaseModel):
     version = IntegerField()

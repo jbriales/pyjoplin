@@ -13,6 +13,7 @@ setup(
     author=pyjoplin.__author__,
     author_email='jesusbriales@gmail.com',
     packages=['pyjoplin', ],
+    install_requires=open('requirements.txt').readlines(),
     entry_points={
         'console_scripts': [
             'pyjoplin = pyjoplin.main:main'
