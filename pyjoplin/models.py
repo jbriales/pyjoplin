@@ -1,7 +1,7 @@
 from peewee import *
 from playhouse.sqlite_ext import *
 
-database = SqliteExtDatabase('/home/jesus/.config/joplin/database.sqlite', **{})
+database = SqliteExtDatabase('/home/jesus/.config/joplin-desktop/database.sqlite', **{})
 
 
 class UnknownField(object):
@@ -119,6 +119,17 @@ class Note(BaseModel):
     user_created_time = IntegerField(constraints=[SQL("DEFAULT 0")])
     user_updated_time = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
 
+    def save(self, *args, **kwargs):
+        # Call default save method
+        rows = super(Note, self).save(*args, **kwargs)
+        # Store this note for full-text search
+        NoteIndex.store_note(self)
+        return rows
+
+    def delete_instance(self, *args, **kwargs):
+        NoteIndex.remove_note(self)
+        return super(Note, self).delete_instance(*args, **kwargs)
+
     class Meta:
         table_name = 'notes'
 
@@ -129,6 +140,26 @@ class NoteIndex(FTSModel):
     uid = TextField()
     title = SearchField()
     body = SearchField()
+
+    @classmethod
+    def store_note(cls, note):
+        try:
+            NoteIndex.get(NoteIndex.uid == note.id)
+        except NoteIndex.DoesNotExist:
+            NoteIndex.create(uid=note.id, title=note.title, body=note.body)
+        else:
+            (NoteIndex
+                .update(title=note.title, body=note.body)
+                .where(NoteIndex.uid == note.id)
+                .execute())
+
+    @classmethod
+    def remove_note(cls, note):
+        try:
+            index_entry = NoteIndex.get(NoteIndex.uid == note.id)
+            index_entry.delete_instance()
+        except NoteIndex.DoesNotExist:
+            pass
 
     class Meta:
         table_name = 'notes_index'

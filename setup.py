@@ -4,7 +4,7 @@ from setuptools import setup
 import pyjoplin
 
 setup(
-    name='FixMendeley',
+    name='pyjoplin',
     version=pyjoplin.__version__,
     description=pyjoplin.__doc__.strip(),
     long_description=open('README.md').read(),
