@@ -96,6 +96,10 @@ def edit(uid):
     call_return = subprocess.call(cmd_str, shell=True)
     assert call_return is 0
 
+    # Save previous title and body for reference
+    previous_title = note.title
+    previous_body = note.body
+
     # Save new content to Notes table
     # NOTE: FTS entry is automatically updated within .save()
     with open(path_tempfile, 'r') as f:
@@ -103,6 +107,11 @@ def edit(uid):
         note.title = f.readline().strip()
         # Read rest of file as body
         note.body = f.read().strip()
+
+    if note.title == previous_title and note.body == previous_body:
+        # Changed nothing, no need to save
+        return
+
     num_saved_notes = note.save()
     assert num_saved_notes == 1, "Error saving note changes"
 
