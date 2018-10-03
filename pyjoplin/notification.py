@@ -11,19 +11,23 @@ from pyjoplin.configuration import config
 notify2.init("pyjoplin")
 
 
-def show(summary, message=''):
+def show(summary, note_title='', message=''):
+    if note_title:
+        full_message = "Note: %s\n%s" % (note_title, message)
+    else:
+        full_message = message
     notification = notify2.Notification(
         summary,
-        message=message,
+        message=full_message,
         icon=config.PATH_ICON
     )
     notification.show()
 
 
-def show_error(summary, message=''):
-    show("ERROR: %s" % summary, message)
+def show_error(summary, note_title='', message=''):
+    show("ERROR: %s" % summary, note_title, message)
 
 
-def show_error_and_raise(summary, message=''):
-    show_error(summary, message)
+def show_error_and_raise(summary, note_title='', message=''):
+    show_error(summary, note_title, message)
     raise Exception(summary)

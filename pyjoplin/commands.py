@@ -36,7 +36,7 @@ def rebuild_fts_index():
             }).execute()
 
     if config.DO_NOTIFY:
-        notification.show("Rebuilt index", "FTS index populated from scratch")
+        notification.show("Rebuilt index", message="FTS index populated from scratch")
 
 
 def search(search_str):
@@ -170,10 +170,10 @@ def imfeelinglucky(uid):
     try:
         stub = re.search(pattern_str, note.body, re.DOTALL).group(1)
     except AttributeError:
-        notification.show("No code stub found")
+        notification.show("No code stub found", note.title)
         return None
 
-    notification.show("Extracted code stub:", stub)
+    notification.show("Extracted code stub:", note.title, stub)
     return stub
 
 
