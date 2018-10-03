@@ -5,7 +5,7 @@ Various miscellanea utils kept here for clarity
 from datetime import datetime
 import os
 
-from pyjoplin.config import config
+from pyjoplin.configuration import config
 
 
 def generate_tempfile_name(prefix, suffix):
