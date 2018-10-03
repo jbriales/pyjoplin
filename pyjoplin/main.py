@@ -94,12 +94,15 @@ def new(title, notebook='search'):
 
 
 def edit(uid):
+    from pyjoplin.utils import generate_tempfile_name
+
     # Find note entry by uid
     note = Note.get(Note.id == uid)
+
     # Populate temporary file from note content
-    path_tempfile = 'ulauncher-joplin-temp.md'
-    with open(path_tempfile, 'w') as f:
-        f.write("%s\n\n\n%s" % (note.title, note.body))
+    path_tempfile = generate_tempfile_name('edit_', '.md')
+    note.to_file(path_tempfile)
+
     # Open file with editor
     cmd_str = 'gedit -s %s +' % path_tempfile
     call_return = subprocess.call(cmd_str, shell=True)
@@ -109,14 +112,10 @@ def edit(uid):
     previous_title = note.title
     previous_body = note.body
 
-    # Save new content to Notes table
-    # NOTE: FTS entry is automatically updated within .save()
-    with open(path_tempfile, 'r') as f:
-        # Get summary from first line
-        note.title = f.readline().strip()
-        # Read rest of file as body
-        note.body = f.read().strip()
+    # Save edited file content to Notes table
+    note.from_file(path_tempfile)
 
+    # Check for note changes
     if note.title == previous_title and note.body == previous_body:
         # Changed nothing, no need to save
         return
@@ -126,6 +125,8 @@ def edit(uid):
         note.delete_instance()
         return
 
+    # Save note changes into database
+    # NOTE: FTS entry is automatically updated within .save()
     num_saved_notes = note.save()
     assert num_saved_notes == 1, "Error saving note changes"
 

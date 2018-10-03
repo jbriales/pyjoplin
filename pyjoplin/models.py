@@ -119,6 +119,30 @@ class Note(BaseModel):
     user_created_time = IntegerField(constraints=[SQL("DEFAULT 0")])
     user_updated_time = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
 
+    def to_file(self, file_path):
+        """
+        Store this note title and body into a text file
+        :param file_path:
+        :return:
+        """
+        with open(file_path, 'w') as f:
+            f.write("%s\n\n\n%s" % (self.title, self.body))
+
+    def from_file(self, file_path):
+        """
+        Populate this note title and body from a text file
+        NOTE: This does not save the note in the database, just changes its content
+        :param file_path:
+        :return:
+        """
+        # Save new content to Notes table
+        # NOTE: FTS entry is automatically updated within .save()
+        with open(file_path, 'r') as f:
+            # Get summary from first line
+            self.title = f.readline().strip()
+            # Read rest of file as body
+            self.body = f.read().strip()
+
     def save(self, *args, **kwargs):
         # Call default save method
         rows = super(Note, self).save(*args, **kwargs)
