@@ -20,13 +20,23 @@ def test():
     print("Creating new test note...")
     test_title = 'temp-test-for-pyjoplin'
     test_query = 'asdfghjkl'
+    test_body = """
+    This is a %s word
+    
+    # Solution: (working or not)
+    blablabla
+    ```python
+    code
+    stub
+    ```
+    """ % test_query
     new(test_title, 'search')
     print("... succeeded!")
 
     # Create content for test note
     print("Saving content for test note...")
     new_note = Note.get(Note.title == test_title)
-    new_note.body = 'This is a %s word' % test_query
+    new_note.body = test_body
     num_saved = new_note.save()
     assert num_saved == 1
     print("... succeeded!")
@@ -36,6 +46,12 @@ def test():
     print("Check test note was indexed in the FTS table...")
     found_index_notes = search(test_query)
     assert len(found_index_notes) == 1
+    print("... succeeded!")
+
+    # Check imfeelinglucky works
+    print("Check imfeelinglucky functionality...")
+    stub = imfeelinglucky(new_note.id)
+    assert stub == u'    code\n    stub\n    '
     print("... succeeded!")
 
     # Delete note
@@ -84,6 +100,14 @@ def main():
         'edit', description=edit.__doc__)
     edit.parser.set_defaults(func=edit)
     edit.parser.add_argument(
+        'uid',
+        help="Note uid (docid)"
+    )
+
+    imfeelinglucky.parser = subparsers.add_parser(
+        'imfeelinglucky', description=imfeelinglucky.__doc__)
+    imfeelinglucky.parser.set_defaults(func=imfeelinglucky)
+    imfeelinglucky.parser.add_argument(
         'uid',
         help="Note uid (docid)"
     )

@@ -145,6 +145,38 @@ def edit(uid):
         notification.show("Note saved", note.title)
 
 
+def imfeelinglucky(uid):
+    """
+    Try to make most straightforward action on note,
+    similar in spirit to "I'm feeling lucky" feature in Google search.
+    :param uid:
+    :return:
+    """
+    # NOTE: For now only implements searching first code stub in Solution:
+    # In other cases it could open url for "link-type" notes
+
+    # Find note entry by uid
+    note = Note.get(Note.id == uid)
+
+    # Parse first code stub (if any)
+    import re
+    # Typical example:
+    # # Solution:
+    # ... (one or several lines)
+    # ```<lang>
+    # <code_stub>
+    # ```
+    pattern_str = r"#?\s*Solution.*?```.*?\n(.*)```"
+    try:
+        stub = re.search(pattern_str, note.body, re.DOTALL).group(1)
+    except AttributeError:
+        notification.show("No code stub found")
+        return None
+
+    notification.show("Extracted code stub:", stub)
+    return stub
+
+
 def delete(uid):
     # Find note entry by uid
     note = Note.get(Note.id == uid)
