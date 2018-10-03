@@ -173,6 +173,10 @@ def imfeelinglucky(uid):
         notification.show("No code stub found", note.title)
         return None
 
+    # Copy stub into the clipboard
+    import pyperclip
+    pyperclip.copy(stub)
+
     notification.show("Extracted code stub:", note.title, stub)
     return stub
 
