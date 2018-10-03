@@ -103,6 +103,7 @@ def edit(uid):
 
     # Find note entry by uid
     note = Note.get(Note.id == uid)
+    backup_title = note.title
 
     # Populate temporary file from note content
     path_tempfile = generate_tempfile_name('edit_', '.md')
@@ -131,7 +132,7 @@ def edit(uid):
     if (not note.title) and (not note.body):
         note.delete_instance()
         if config.DO_NOTIFY:
-            notification.show("Deleted note", note.title)
+            notification.show("Deleted note", backup_title)
         return
 
     # Save note changes into database
