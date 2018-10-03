@@ -4,11 +4,18 @@ Define global configuration variables
 - Paths
 """
 import os
+from pkg_resources import resource_filename
 
 
 class Config:
+    # Folders
     PATH_CONFIG = os.path.expanduser("~/.config/pyjoplin/")
     PATH_TEMP = "/tmp/pyjoplin/"
+    # Files
+    PATH_ICON = resource_filename('pyjoplin', 'images/pyjoplin-64.png')
+
+    # Use desktop notifications for pyjoplin actions
+    DO_NOTIFY = True
 
     # TODO: Use path to load/save config in file
     # Example: https://github.com/adamchainz/lifelogger/blob/master/lifelogger/config.py
@@ -18,7 +25,7 @@ class Config:
         # self._data = {}
 
         # Ensure config path folders exist
-        for folder in [self.CONFIG_PATH, self.TEMP_PATH]:
+        for folder in [self.PATH_CONFIG, self.PATH_TEMP]:
             if not os.path.exists(folder):
                 try:
                     os.makedirs(folder)
