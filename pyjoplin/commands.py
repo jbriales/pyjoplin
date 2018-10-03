@@ -174,8 +174,13 @@ def imfeelinglucky(uid):
         return None
 
     # Copy stub into the clipboard
-    import pyperclip
-    pyperclip.copy(stub)
+    # NOTE: Using xclip because pyperclip does not work
+    # Create temporary file with text
+    path_tempfile = os.path.join(config.PATH_TEMP, 'stub')
+    with open(path_tempfile, 'w') as f:
+        f.write(stub)
+    cmd = "xclip -selection clipboard %s" % path_tempfile
+    subprocess.call(cmd, shell=True)
 
     notification.show("Extracted code stub:", note.title, stub)
     return stub

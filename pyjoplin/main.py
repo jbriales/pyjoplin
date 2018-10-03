@@ -54,6 +54,13 @@ def test():
     assert stub == u'    code\n    stub\n    '
     print("... succeeded!")
 
+    # Check clipboard was correctly populated
+    import pyperclip
+    print("Check clipboard content...")
+    clipboard_content = pyperclip.paste()
+    assert clipboard_content == stub
+    print("... succeeded!")
+
     # Delete note
     # NOTE: Index should be updated upon .delete()
     delete(new_note.id)
