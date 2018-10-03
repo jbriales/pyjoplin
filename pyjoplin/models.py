@@ -126,7 +126,7 @@ class Note(BaseModel):
         :return:
         """
         with open(file_path, 'w') as f:
-            f.write("%s\n\n\n%s" % (self.title, self.body))
+            f.write("%s\n\n%s" % (self.title, self.body))
 
     def from_file(self, file_path):
         """
