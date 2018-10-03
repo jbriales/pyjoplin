@@ -166,7 +166,7 @@ def imfeelinglucky(uid):
     # ```<lang>
     # <code_stub>
     # ```
-    pattern_str = r"#?\s*Solution.*?```.*?\n(.*)```"
+    pattern_str = r"#?\s*Solution.*?```.*?\n(.*?)```"
     try:
         stub = re.search(pattern_str, note.body, re.DOTALL).group(1)
     except AttributeError:
