@@ -83,6 +83,15 @@ def new(title, notebook='search'):
     # Create new note in Joplin CLI
     subprocess.call("joplin mknote \'%s\'" % title, shell=True)
 
+    # Retrieve new note id
+    try:
+        new_note = Note.get(Note.title == title)
+    except Note.DoesNotExist:
+        print("ERROR: Note creation via joplin CLI failed")
+        raise Note.DoesNotExist
+
+    return new_note.id
+
 
 def edit(uid):
     # Find note entry by uid
@@ -90,9 +99,9 @@ def edit(uid):
     # Populate temporary file from note content
     path_tempfile = 'ulauncher-joplin-temp.md'
     with open(path_tempfile, 'w') as f:
-        f.write("%s\n\n%s" % (note.title, note.body))
+        f.write("%s\n\n\n%s" % (note.title, note.body))
     # Open file with editor
-    cmd_str = 'gedit -s %s' % path_tempfile
+    cmd_str = 'gedit -s %s +' % path_tempfile
     call_return = subprocess.call(cmd_str, shell=True)
     assert call_return is 0
 
@@ -112,6 +121,11 @@ def edit(uid):
         # Changed nothing, no need to save
         return
 
+    # Delete entry if empty
+    if (not note.title) and (not note.body):
+        note.delete_instance()
+        return
+
     num_saved_notes = note.save()
     assert num_saved_notes == 1, "Error saving note changes"
 
@@ -124,14 +138,9 @@ def delete(uid):
 
 def new_and_edit(title, notebook='search'):
     # Create new entry via Joplin CLI
-    new(title, notebook)
-    # Retrieve new note id
-    try:
-        new_note = Note.get(Note.title == title)
-    except Note.DoesNotExist:
-        print("ERROR: Note creation failed")
+    new_uid = new(title, notebook)
     # Edit note
-    edit(new_note.id)
+    edit(new_uid)
 
 
 def toy(search_terms):
