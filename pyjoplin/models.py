@@ -1,3 +1,5 @@
+from io import open  # Unicode compatibility via default utf-8 encoding
+
 from peewee import *
 from playhouse.sqlite_ext import *
 
@@ -125,7 +127,7 @@ class Note(BaseModel):
         :param file_path:
         :return:
         """
-        with open(file_path, 'w') as f:
+        with open(file_path, 'w', encoding='utf-8') as f:
             f.write("%s\n\n%s" % (self.title, self.body))
 
     def from_file(self, file_path):
@@ -137,7 +139,7 @@ class Note(BaseModel):
         """
         # Save new content to Notes table
         # NOTE: FTS entry is automatically updated within .save()
-        with open(file_path, 'r') as f:
+        with open(file_path, 'r', encoding='utf-8') as f:
             # Get summary from first line
             self.title = f.readline().strip()
             # Read rest of file as body
