@@ -103,7 +103,7 @@ def new(title, notebook='search'):
     subprocess.call("joplin use %s" % notebook, shell=True)
 
     # Create new note in Joplin CLI
-    subprocess.call("joplin mknote \'%r\'" % title, shell=True)
+    subprocess.call("joplin mknote \'%s\'" % title, shell=True)
 
     # Retrieve new note id
     try:
