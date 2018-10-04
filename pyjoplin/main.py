@@ -7,8 +7,18 @@ Interface Joplin via python
 import argparse
 import six
 import sys
+from termcolor import colored
+import traceback
 
 from pyjoplin.commands import *
+
+
+def print_green(text):
+    print(colored(text, 'green'))
+    
+
+def print_red(text):
+    print(colored(text, 'red'))
 
 
 def test():
@@ -16,12 +26,15 @@ def test():
     Test main pyjoplin functionalities: new, search
     :return:
     """
+
     # Create new test note
     print("Creating new test note...")
     test_title = 'temp-test-for-pyjoplin'
     test_query = 'asdfghjkl'
-    test_body = """
+    test_body = u"""
     This is a %s word
+    
+    This is a unicode string: \u2192
     
     # Solution: (working or not)
     blablabla
@@ -31,7 +44,7 @@ def test():
     ```
     """ % test_query
     new(test_title, 'search')
-    print("... succeeded!")
+    print_green("... succeeded!")
 
     # Create content for test note
     print("Saving content for test note...")
@@ -39,20 +52,40 @@ def test():
     new_note.body = test_body
     num_saved = new_note.save()
     assert num_saved == 1
-    print("... succeeded!")
+    print_green("... succeeded!")
+
+    # Try writing note to tempfile (with unicode content!)
+    print("Saving note content to temp text file...")
+    from utils import generate_tempfile_name
+    path_tempfile = generate_tempfile_name('edit_', '.md')
+    try:
+        new_note.to_file(path_tempfile)
+        print_green("... succeeded!")
+    except:
+        print_red("Failed! See traceback for details:")
+        print(traceback.format_exc())
+
+    # Try reading back from file to note
+    print("Writing temp text file to note content...")
+    try:
+        new_note.from_file(path_tempfile)
+        print_green("... succeeded!")
+    except:
+        print_red("Failed! See traceback for details:")
+        print(traceback.format_exc())
 
     # Check fulltext search works
     # NOTE: Index should be updated upon .save()
     print("Check test note was indexed in the FTS table...")
     found_index_notes = search(test_query)
     assert len(found_index_notes) == 1
-    print("... succeeded!")
+    print_green("... succeeded!")
 
     # Check imfeelinglucky works
     print("Check imfeelinglucky functionality...")
     stub = imfeelinglucky(new_note.id)
     assert stub == u'    code\n    stub\n    '
-    print("... succeeded!")
+    print_green("... succeeded!")
 
     # TODO: Check also with inline stub
 
@@ -61,7 +94,7 @@ def test():
     print("Check clipboard content...")
     clipboard_content = pyperclip.paste()
     assert clipboard_content == stub
-    print("... succeeded!")
+    print_green("... succeeded!")
 
     # Delete note
     # NOTE: Index should be updated upon .delete()
@@ -72,7 +105,7 @@ def test():
     print("Check test note removed from FTS index after deletion...")
     found_index_notes = search(test_query)
     assert len(found_index_notes) == 0
-    print("... succeeded!")
+    print_green("... succeeded!")
 
     print("Complete test succeeded!")
 
