@@ -54,6 +54,8 @@ def test():
     assert stub == u'    code\n    stub\n    '
     print("... succeeded!")
 
+    # TODO: Check also with inline stub
+
     # Check clipboard was correctly populated
     import pyperclip
     print("Check clipboard content...")

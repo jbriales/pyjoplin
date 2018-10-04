@@ -180,16 +180,28 @@ def imfeelinglucky(uid):
 
     # Parse first code stub (if any)
     import re
-    # Typical example:
-    # # Solution:
-    # ... (one or several lines)
-    # ```<lang>
-    # <code_stub>
-    # ```
-    pattern_str = r"#?\s*Solution.*?```.*?\n(.*?)```"
-    try:
-        stub = re.search(pattern_str, note.body, re.DOTALL).group(1)
-    except AttributeError:
+    stub = ""
+    if not stub:
+        # Typical example:
+        # # Solution...
+        # ... (one or several lines)
+        # ```<lang>
+        # <code_stub>
+        # ```
+        pattern_str = r"#?\s*Solution.*?```.*?\n(.*?)```"
+        m = re.search(pattern_str, note.body, re.DOTALL)
+        if m:
+            stub = m.group(1)
+    if not stub:
+        # Inline solution:
+        # # Solution...
+        # ... (one or several lines)
+        # `<code_stub>`
+        pattern_str = r"#?\s*Solution.*?`(.*?)`"
+        m = re.search(pattern_str, note.body, re.DOTALL)
+        if m:
+            stub = m.group(1)
+    if not stub:
         notification.show("No code stub found", note.title)
         return None
 
