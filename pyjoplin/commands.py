@@ -103,13 +103,13 @@ def new(title, notebook='search'):
     subprocess.call("joplin use %s" % notebook, shell=True)
 
     # Create new note in Joplin CLI
-    subprocess.call("joplin mknote \'%s\'" % title, shell=True)
+    subprocess.call("joplin mknote \'%r\'" % title, shell=True)
 
     # Retrieve new note id
     try:
         new_note = Note.get(Note.title == title)
     except Note.DoesNotExist:
-        print("ERROR: Note creation via joplin CLI failed")
+        notification.show_error("Creating new note via Joplin CLI", title)
         raise Note.DoesNotExist
 
     if config.DO_NOTIFY:
