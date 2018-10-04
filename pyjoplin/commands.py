@@ -55,6 +55,23 @@ def search(search_str):
     return found_index_notes
 
 
+def get_notes_by_id(ids, ordered=False):
+    # Find notes with id in uids
+    # Peewee: `x << y` stands for `x in y`
+    # NOTE: Order in query is unrelated to order in uids
+    query = Note.select().where(Note.id << ids).dicts()
+    # Debug: [note['id'] for note in query]
+
+    if ordered:
+        # Order query list in same order as uids
+        dict_query = {note['id']: note for note in query}
+        ordered_notes = [dict_query[id] for id in ids]
+        query = ordered_notes
+        # Debug: [note['id'] for note in query]
+
+    return query
+
+
 def setup():
     """
     Do setup required by pyjoplin for interfacing with desktop and terminal app
