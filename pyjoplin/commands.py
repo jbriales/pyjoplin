@@ -65,7 +65,10 @@ def get_notes_by_id(ids, ordered=False):
     if ordered:
         # Order query list in same order as uids
         dict_query = {note['id']: note for note in query}
-        ordered_notes = [dict_query[id] for id in ids]
+        # Grab note only if in the query
+        ordered_notes = [dict_query[id]
+                         for id in ids
+                         if id in dict_query]
         query = ordered_notes
         # Debug: [note['id'] for note in query]
 
