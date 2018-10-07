@@ -202,7 +202,8 @@ def imfeelinglucky(uid):
         if m:
             stub = m.group(1)
     if not stub:
-        notification.show("No code stub found", note.title)
+        notification.show("No code stub found, opening file", note.title)
+        edit(uid)
         return None
     # Strip newlines to avoid unexpected execution e.g. in shell
     stub = stub.strip('\n')
