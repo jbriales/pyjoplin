@@ -204,6 +204,8 @@ def imfeelinglucky(uid):
     if not stub:
         notification.show("No code stub found", note.title)
         return None
+    # Strip newlines to avoid unexpected execution e.g. in shell
+    stub = stub.strip('\n')
 
     # Copy stub into the clipboard
     # NOTE: Using xclip because pyperclip does not work
