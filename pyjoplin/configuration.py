@@ -14,6 +14,8 @@ class Config:
     # Files
     PATH_ICON = resource_filename('pyjoplin', 'images/pyjoplin-64.png')
 
+    EDITOR_CALL_TEMPLATE = 'gedit -s %s +'  # substitute file path as EDITOR_TEMPLATE % filepath
+
     # Use desktop notifications for pyjoplin actions
     DO_NOTIFY = True
 

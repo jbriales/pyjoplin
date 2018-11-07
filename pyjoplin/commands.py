@@ -130,7 +130,7 @@ def edit(uid):
     note.to_file(path_tempfile)
 
     # Open file with editor
-    cmd_str = 'gedit -s %s +' % path_tempfile
+    cmd_str = config.EDITOR_CALL_TEMPLATE % path_tempfile
     call_return = subprocess.call(cmd_str, shell=True)
     assert call_return is 0
 
