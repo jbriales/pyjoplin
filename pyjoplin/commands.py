@@ -131,7 +131,14 @@ def edit(uid):
 
     # Open file with editor
     cmd_str = config.EDITOR_CALL_TEMPLATE % path_tempfile
-    call_return = subprocess.call(cmd_str, shell=True)
+    call_return = subprocess.call(
+        cmd_str, shell=True,
+        env=dict(
+            os.environ,
+            PYTHONPATH='',  # avoid issues when calling Python3 scripts from Python2
+            DISPLAY=":0.0"  # ensure some GUI apps catch the right display
+        )
+    )
     assert call_return is 0
 
     # Save previous title and body for reference
