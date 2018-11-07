@@ -127,6 +127,16 @@ class Note(BaseModel):
         :param file_path:
         :return:
         """
+
+        # Find images
+        r = re.compile(r'!\[.*?\]\((.*?)\)')
+        list_image_uris = r.findall(self.body)
+        for uri in list_image_uris:
+            # assert isinstance(uri, str)
+            if uri.startswith('https:'):
+                print('STOP')
+            # elif uri.startswith()
+
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write("%s\n\n%s" % (self.title, self.body))
 

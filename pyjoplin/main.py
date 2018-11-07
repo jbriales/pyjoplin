@@ -36,12 +36,17 @@ def test():
     
     This is a unicode string: \u2192
     
+    ![a test image!](https://the_image_url1)
+    
     # Solution: (working or not)
     blablabla
     ```python
     code
     stub
     ```
+    
+    ![a second test image!](https://the_image_url2)
+    
     """ % test_query
     new(test_title, 'search')
     print_green("... succeeded!")
