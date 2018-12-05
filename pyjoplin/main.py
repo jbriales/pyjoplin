@@ -27,6 +27,13 @@ def test():
     :return:
     """
 
+    try:
+        subprocess.check_output('type -t joplin', shell=True)
+    except subprocess.CalledProcessError as err:
+        print("ERROR: joplin CLI does not exist")
+        print("Sol: Install")
+        return False
+
     # Create new test note
     print("Creating new test note...")
     test_title = 'temp-test-for-pyjoplin'
