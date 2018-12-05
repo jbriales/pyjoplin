@@ -113,7 +113,7 @@ def new(title, notebook='search'):
         raise Note.DoesNotExist
 
     if config.DO_NOTIFY:
-        notification.show("New note created", title)
+        notification.show("New note created in %s" % notebook, title)
 
     return new_note.id
 
