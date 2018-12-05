@@ -1,5 +1,6 @@
 from io import open  # Unicode compatibility via default utf-8 encoding
 import os
+import traceback
 
 from peewee import *
 from playhouse.sqlite_ext import *
@@ -152,7 +153,11 @@ class Note(BaseModel):
         # Call default save method
         rows = super(Note, self).save(*args, **kwargs)
         # Store this note for full-text search
-        NoteIndex.store_note(self)
+        try:
+            NoteIndex.store_note(self)
+        except OperationalError as err:
+            print(traceback.format_exc())
+            print("Sol: Run pyjoplin rebuild_fts_index?")
         return rows
 
     def delete_instance(self, *args, **kwargs):
