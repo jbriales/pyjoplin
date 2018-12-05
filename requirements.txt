@@ -1,1 +1,4 @@
 peewee
+termcolor
+notify2
+pyperclip
