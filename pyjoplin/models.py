@@ -1,9 +1,12 @@
 from io import open  # Unicode compatibility via default utf-8 encoding
+import os
 
 from peewee import *
 from playhouse.sqlite_ext import *
 
-database = SqliteExtDatabase('/home/jesus/.config/joplin-desktop/database.sqlite', **{})
+
+path_database = os.path.expanduser('~/.config/joplin-desktop/database.sqlite')
+database = SqliteExtDatabase(path_database, **{})
 
 
 class UnknownField(object):
