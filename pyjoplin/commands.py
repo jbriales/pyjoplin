@@ -133,11 +133,12 @@ def edit(uid):
     cmd_str = config.EDITOR_CALL_TEMPLATE % path_tempfile
     proc = subprocess.Popen(
         cmd_str, shell=True,
-        env=dict(
-            os.environ,
-            PYTHONPATH='',  # avoid issues when calling Python3 scripts from Python2
-            DISPLAY=":0.0"  # ensure some GUI apps catch the right display
-        )
+        # NOTE: This is needed for non-gedit editors, but DISPLAY seems to be giving issues
+        # env=dict(
+        #     os.environ,
+        #     PYTHONPATH='',  # avoid issues when calling Python3 scripts from Python2
+        #     DISPLAY=":0.0"  # ensure some GUI apps catch the right display
+        # ),
         stdout=subprocess.PIPE
     )
     returncode = proc.wait()
