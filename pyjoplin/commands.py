@@ -123,10 +123,12 @@ def edit(uid):
 
     # Find note entry by uid
     note = Note.get(Note.id == uid)
-    backup_title = note.title
+    # Save previous title and body for reference
+    previous_title = note.title
+    previous_body = note.body
 
     # Populate temporary file from note content
-    path_tempfile = generate_tempfile_name('edit_', '.md')
+    path_tempfile = os.path.join(config.PATH_TEMP, '%s.md' % uid)
     note.to_file(path_tempfile)
 
     # Open file with editor
@@ -141,20 +143,29 @@ def edit(uid):
         # ),
         stdout=subprocess.PIPE
     )
+
+    # Loop during edition to save incremental changes
+    import time
+    while proc.poll() is None:
+        print("edition still running")
+        time.sleep(5.0)
+        note.from_file(path_tempfile)
+        if note.title != previous_title or note.body != previous_body:
+            num_saved_notes = note.save()
+            if num_saved_notes != 1:
+                notification.show_error("Saving note changes during edition", note.title)
+
     returncode = proc.wait()
     if returncode != 0:
-        output = proc.stdout.read().decode('utf-8')
-        print("Popen done:")
+        print("ERROR during edition")
         print("Output:")
+        output = proc.stdout.read().decode('utf-8')
         print(output)
         raise Exception
 
-    # Save previous title and body for reference
-    previous_title = note.title
-    previous_body = note.body
-
     # Save edited file content to Notes table
     note.from_file(path_tempfile)
+    os.remove(path_tempfile)
 
     # Check for note changes
     if note.title == previous_title and note.body == previous_body:
@@ -167,7 +178,7 @@ def edit(uid):
     if (not note.title) and (not note.body):
         note.delete_instance()
         if config.DO_NOTIFY:
-            notification.show("Deleted note", backup_title)
+            notification.show("Deleted note", previous_title)
         return
 
     # Save note changes into database
