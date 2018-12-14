@@ -129,6 +129,10 @@ def edit(uid):
 
     # Populate temporary file from note content
     path_tempfile = os.path.join(config.PATH_TEMP, '%s.md' % uid)
+    if os.path.exists(path_tempfile):
+        notification.show_error("Note is already under edit", note.title)
+        return False
+
     note.to_file(path_tempfile)
 
     # Open file with editor
