@@ -150,14 +150,18 @@ def edit(uid):
 
     # Loop during edition to save incremental changes
     import time
+    last_modification_time = os.path.getmtime(path_tempfile)
     while proc.poll() is None:
-        print("edition still running")
-        time.sleep(5.0)
-        note.from_file(path_tempfile)
-        if note.title != init_title or note.body != init_body:
+        time.sleep(0.5)
+        if os.path.getmtime(path_tempfile) > last_modification_time:
+            last_modification_time = os.path.getmtime(path_tempfile)
+
+            note.from_file(path_tempfile)
             num_saved_notes = note.save()
             if num_saved_notes != 1:
                 notification.show_error("Saving note changes during edition", note.title)
+            # else:
+            #     notification.show("Note saved", note.title)
 
     returncode = proc.wait()
     if returncode != 0:
