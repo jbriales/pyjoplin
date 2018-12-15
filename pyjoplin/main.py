@@ -153,6 +153,14 @@ def main():
         help="Note uid (docid)"
     )
 
+    find_title.parser = subparsers.add_parser(
+        'find-title', description=find_title.__doc__)
+    find_title.parser.set_defaults(func=find_title)
+    find_title.parser.add_argument(
+        'title',
+        help="Note title to search"
+    )
+
     imfeelinglucky.parser = subparsers.add_parser(
         'imfeelinglucky', description=imfeelinglucky.__doc__)
     imfeelinglucky.parser.set_defaults(func=imfeelinglucky)

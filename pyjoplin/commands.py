@@ -215,6 +215,16 @@ def edit(uid):
         notification.show("Note saved", note.title)
 
 
+def find_title(title):
+    try:
+        note = Note.get(Note.title == title)
+        print(note.id)
+        print(note.title)
+        print(note.body)
+    except:
+        print("No exact match found for query")
+
+
 def imfeelinglucky(uid):
     """
     Try to make most straightforward action on note,
