@@ -47,12 +47,12 @@ def find_empty_notes():
     :return:
     """
 
-    notes = Note.select()
+    notes = Note.select().order_by(Note.title)
     print("Listing empty notes:")
     with db.atomic():
         for note in notes:
             if not note.body:
-                print(note.title)
+                print('%s %s' % (note.id, note.title))
 
 
 def search(search_str):
