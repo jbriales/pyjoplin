@@ -145,10 +145,15 @@ def edit(uid):
     init_body = note.body
 
     # Populate temporary file from note content
-    path_tempfile = os.path.join(config.PATH_TEMP, '%s.md' % uid)
-    if os.path.exists(path_tempfile):
+    path_sentinel = os.path.join(config.PATH_TEMP, '%s' % uid)
+    if os.path.exists(path_sentinel):
         notification.show_error("Note is already under edit", note.title)
         return False
+    else:
+        # Create sentinel to block this note
+        open(path_sentinel, 'a').close()
+
+    path_tempfile = os.path.join(config.PATH_TEMP, '%s.md' % note.title)
 
     note.to_file(path_tempfile)
 
@@ -191,6 +196,7 @@ def edit(uid):
     # Save edited file content to Notes table
     note.from_file(path_tempfile)
     os.remove(path_tempfile)
+    os.remove(path_sentinel)
 
     # Check for note changes
     if note.title == init_title and note.body == init_body:
