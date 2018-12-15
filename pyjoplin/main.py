@@ -208,6 +208,11 @@ def main():
         'find_empty', description=find_empty_notes.__doc__
     )
     find_empty_notes.parser.set_defaults(func=find_empty_notes)
+    find_empty_notes.parser.add_argument(
+        "--delete",
+        help="Delete found empty notes",
+        action='store_true'
+    )
 
     if len(sys.argv) <= 1:
         parser.print_help()

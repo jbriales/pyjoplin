@@ -39,7 +39,7 @@ def rebuild_fts_index():
         notification.show("Rebuilt index", message="FTS index populated from scratch")
 
 
-def find_empty_notes():
+def find_empty_notes(delete=False):
     """
     Find and report empty notes
     Useful e.g. to find if some note was left empty due to synchronization issues
@@ -53,6 +53,9 @@ def find_empty_notes():
         for note in notes:
             if not note.body:
                 print('%s %s' % (note.id, note.title))
+                if delete:
+                    note.delete_instance()
+                    print('Deleted')
 
 
 def search(search_str):
