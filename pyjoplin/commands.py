@@ -39,6 +39,22 @@ def rebuild_fts_index():
         notification.show("Rebuilt index", message="FTS index populated from scratch")
 
 
+def find_empty_notes():
+    """
+    Find and report empty notes
+    Useful e.g. to find if some note was left empty due to synchronization issues
+
+    :return:
+    """
+
+    notes = Note.select()
+    print("Listing empty notes:")
+    with db.atomic():
+        for note in notes:
+            if not note.body:
+                print(note.title)
+
+
 def search(search_str):
     # Search query in the FTS table
     with db.atomic():

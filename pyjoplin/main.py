@@ -196,6 +196,11 @@ def main():
     )
     toy.parser.set_defaults(func=toy)
 
+    find_empty_notes.parser = subparsers.add_parser(
+        'find_empty', description=find_empty_notes.__doc__
+    )
+    find_empty_notes.parser.set_defaults(func=find_empty_notes)
+
     if len(sys.argv) <= 1:
         parser.print_help()
         return True
