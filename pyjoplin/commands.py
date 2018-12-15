@@ -138,8 +138,6 @@ def new(title, notebook='search'):
 
 
 def edit(uid):
-    from pyjoplin.utils import generate_tempfile_name
-
     # Find note entry by uid
     note = Note.get(Note.id == uid)
     # Save previous title and body for reference
