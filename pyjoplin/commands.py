@@ -153,7 +153,7 @@ def edit(uid):
         # Create sentinel to block this note
         open(path_sentinel, 'a').close()
 
-    path_tempfile = os.path.join(config.PATH_TEMP, '%s.md' % note.title)
+    path_tempfile = os.path.join(config.PATH_TEMP, '%s.md' % note.title.replace('/', '_'))
 
     note.to_file(path_tempfile)
 
