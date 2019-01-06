@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import inspect
 import os
 import subprocess
 
@@ -138,6 +139,11 @@ def new(title, notebook='search'):
 
 
 def edit(uid):
+    subprocess.Popen(
+        'increase_hit_history_for pyjoplin %s' % inspect.currentframe().f_code.co_name,
+        shell=True
+    )
+
     # Find note entry by uid
     note = Note.get(Note.id == uid)
     # Save previous title and body for reference
@@ -239,6 +245,11 @@ def imfeelinglucky(uid):
     :param uid:
     :return:
     """
+    subprocess.Popen(
+        'increase_hit_history_for pyjoplin %s' % inspect.currentframe().f_code.co_name,
+        shell=True
+    )
+
     # NOTE: For now only implements searching first code stub in Solution:
     # In other cases it could open url for "link-type" notes
 
