@@ -153,7 +153,7 @@ def edit(uid):
     # Populate temporary file from note content
     path_sentinel = os.path.join(config.PATH_TEMP, '%s' % uid)
     if os.path.exists(path_sentinel):
-        notification.show_error("Note is already under edit", note.title)
+        notification.show_error("Note is already under edit", note.title, note.id)
         return False
     else:
         # Create sentinel to block this note
