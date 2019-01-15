@@ -178,11 +178,11 @@ def edit(uid):
 
     # Loop during edition to save incremental changes
     import time
-    last_modification_time = os.path.getmtime(path_tempfile)
+    last_modification_time_sec = os.path.getmtime(path_tempfile)
     while proc.poll() is None:
         time.sleep(0.5)
-        if os.path.getmtime(path_tempfile) > last_modification_time:
-            last_modification_time = os.path.getmtime(path_tempfile)
+        if os.path.getmtime(path_tempfile) > last_modification_time_sec:
+            last_modification_time_sec = os.path.getmtime(path_tempfile)
 
             note.from_file(path_tempfile)
             num_saved_notes = note.save()

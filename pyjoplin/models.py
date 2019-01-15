@@ -1,5 +1,6 @@
 from io import open  # Unicode compatibility via default utf-8 encoding
 import os
+import time
 import traceback
 
 from peewee import *
@@ -150,6 +151,11 @@ class Note(BaseModel):
             self.body = f.read().strip()
 
     def save(self, *args, **kwargs):
+        # Make sure user_updated_time is changed to trigger syncs
+        current_timestamp_sec = time.time()
+        uint_current_timestamp_msec = int(current_timestamp_sec * 1000)
+        self.updated_time = uint_current_timestamp_msec
+
         # Call default save method
         rows = super(Note, self).save(*args, **kwargs)
         # Store this note for full-text search
