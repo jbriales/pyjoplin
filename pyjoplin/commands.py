@@ -3,10 +3,11 @@
 import inspect
 import os
 import subprocess
+import time
 
 from peewee import fn, Entity
 
-from pyjoplin.models import Note, NoteIndex, database as db
+from pyjoplin.models import Note, NoteIndex, Folder, database as db
 from pyjoplin.configuration import config
 from pyjoplin import notification
 
@@ -111,29 +112,44 @@ def setup():
         notification.show("Setup succeeded")
 
 
-def new(title, notebook='search'):
+def new(title, notebook_name='search'):
     """
     Create new note in notebook
     :param title:
     :param notebook:
     :return:
     """
-    # Set destination notebook as active in Joplin CLI
-    # joplin use <notebook>
-    subprocess.call("joplin use %s" % notebook, shell=True)
-
-    # Create new note in Joplin CLI
-    subprocess.call("joplin mknote \'%s\'" % title, shell=True)
-
-    # Retrieve new note id
+    # Retrieve notebook id
     try:
-        new_note = Note.get(Note.title == title)
-    except Note.DoesNotExist:
-        notification.show_error("Creating new note via Joplin CLI", title)
-        raise Note.DoesNotExist
+        notebook = Folder.get(Folder.title == notebook_name)
+    except Folder.DoesNotExist:
+        notification.show_error("Notebook not found", notebook_name)
+        raise Folder.DoesNotExist
 
+    # Create new note instance
+    # Get unique identifier following Joplin format
+    # Source: https://github.com/laurent22/joplin/issues/305#issuecomment-374123414
+    import uuid
+    uid = str(uuid.uuid4()).replace('-', '')
+    # Get current time in Joplin format (int epoch in milliseconds)
+    current_timestamp_sec = time.time()
+    uint_current_timestamp_msec = int(current_timestamp_sec * 1000)
+    new_note = Note(
+        created_time=uint_current_timestamp_msec,
+        id=uid,
+        parent=notebook.id,
+        source='pyjoplin',
+        source_application='pyjoplin',
+        title=title,
+        updated_time=uint_current_timestamp_msec,
+        user_created_time=uint_current_timestamp_msec,
+        user_updated_time=uint_current_timestamp_msec
+    )
+    num_saved_notes = new_note.save(force_insert=True)
+    if num_saved_notes != 1:
+        notification.show_error_and_raise("Creating note", new_note.title)
     if config.DO_NOTIFY:
-        notification.show("New note created in %s" % notebook, title)
+        notification.show("New note created in nb %s" % notebook.title, title)
 
     return new_note.id
 
@@ -234,6 +250,15 @@ def find_title(title):
         print(note.id)
         print(note.title)
         print(note.body)
+    except:
+        print("No exact match found for query")
+
+
+def find_notebook(name):
+    try:
+        notebook = Folder.get(Folder.title == name)
+        print(notebook.id)
+        print(notebook.title)
     except:
         print("No exact match found for query")
 

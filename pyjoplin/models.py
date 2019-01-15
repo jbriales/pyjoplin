@@ -38,7 +38,7 @@ class DeletedItems(BaseModel):
         table_name = 'deleted_items'
 
 
-class Folders(BaseModel):
+class Folder(BaseModel):
     created_time = IntegerField()
     encryption_applied = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
     encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '""'")])
