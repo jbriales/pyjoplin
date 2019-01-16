@@ -182,10 +182,20 @@ class Note(BaseModel):
                 notebook_name = config.DEFAULT_NOTEBOOK_NAME
             try:
                 notebook = Folder.get(Folder.title == notebook_name)
+                if notebook.id != self.parent:
+                    previous_notebook = Folder.get(Folder.id == self.parent)
+                    notification.show(
+                        "Notebook changed",
+                        note_title=self.title,
+                        summary='Changed from #%s to #%s' % (previous_notebook.title, notebook.title)
+                    )
+                self.parent = notebook.id
             except Folder.DoesNotExist:
-                notification.show_error("Notebook not found", message=notebook_name)
-                raise Folder.DoesNotExist
-            self.parent = notebook.id
+                previous_notebook = Folder.get(Folder.id == self.parent)
+                notification.show_error(
+                    "Notebook not found",
+                    message='#%s\nSaving to previous notebook #%s instead' % (notebook_name, previous_notebook.title)
+                )
 
             # Read rest of file as body
             self.body = f.read().strip()
