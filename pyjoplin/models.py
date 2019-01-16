@@ -182,7 +182,7 @@ class Note(BaseModel):
                 notebook_name = config.DEFAULT_NOTEBOOK_NAME
             try:
                 notebook = Folder.get(Folder.title == notebook_name)
-                if notebook.id != self.parent:
+                if self.parent is not None and notebook.id != self.parent:
                     previous_notebook = Folder.get(Folder.id == self.parent)
                     notification.show(
                         "Notebook changed",
