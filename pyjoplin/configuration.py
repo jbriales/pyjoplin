@@ -21,6 +21,8 @@ class Config:
     # Use desktop notifications for pyjoplin actions
     DO_NOTIFY = True
 
+    DEFAULT_NOTEBOOK_NAME = 'personal'
+
     # TODO: Use path to load/save config in file
     # Example: https://github.com/adamchainz/lifelogger/blob/master/lifelogger/config.py
     def __init__(self):

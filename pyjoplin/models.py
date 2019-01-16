@@ -5,6 +5,8 @@ import traceback
 
 from peewee import *
 from playhouse.sqlite_ext import *
+from pyjoplin import notification
+from pyjoplin.configuration import config
 
 
 path_database = os.path.expanduser('~/.config/joplin-desktop/database.sqlite')
@@ -143,8 +145,13 @@ class Note(BaseModel):
         :param file_path:
         :return:
         """
+        try:
+            notebook = Folder.get(Folder.id == self.parent)
+        except Folder.DoesNotExist:
+            notification.show_error("Notebook not found", message='nb id %s' % self.parent)
+            raise Folder.DoesNotExist
         with open(file_path, 'w', encoding='utf-8') as f:
-            f.write("%s\n\n%s" % (self.title, self.body))
+            f.write("%s\n#%s\n\n%s" % (self.title, notebook.title, self.body))
 
     def from_file(self, file_path):
         """
@@ -158,6 +165,28 @@ class Note(BaseModel):
         with open(file_path, 'r', encoding='utf-8') as f:
             # Get summary from first line
             self.title = f.readline().strip()
+
+            # Get notebook name from second line (if any)
+            notebook_name_line = f.readline().strip()
+            if notebook_name_line:
+                try:
+                    assert notebook_name_line.startswith('#')
+                except AssertionError:
+                    notification.show_error(
+                        "Bad notebook line format",
+                        message='Lines is: %s\nShould start with #' % notebook_name_line
+                    )
+                    raise RuntimeError("Bad notebook line format")
+                notebook_name = notebook_name_line[1:]
+            else:
+                notebook_name = config.DEFAULT_NOTEBOOK_NAME
+            try:
+                notebook = Folder.get(Folder.title == notebook_name)
+            except Folder.DoesNotExist:
+                notification.show_error("Notebook not found", message=notebook_name)
+                raise Folder.DoesNotExist
+            self.parent = notebook.id
+
             # Read rest of file as body
             self.body = f.read().strip()
 
