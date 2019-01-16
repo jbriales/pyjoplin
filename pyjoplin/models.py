@@ -126,6 +126,17 @@ class Note(BaseModel):
     user_created_time = IntegerField(constraints=[SQL("DEFAULT 0")])
     user_updated_time = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
 
+    def __repr__(self):
+        if self.body:
+            repr_body = '...'
+        else:
+            repr_body = None
+        if self.parent:
+            repr_notebook = Folder.get(Folder.id == self.parent).title
+        else:
+            repr_notebook = None
+        return "Note: %s, nb: %s, title: %s, body: %s" % (self.id, repr_notebook, self.title, repr_body)
+
     def to_file(self, file_path):
         """
         Store this note title and body into a text file
