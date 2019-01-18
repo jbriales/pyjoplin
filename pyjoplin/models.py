@@ -252,7 +252,7 @@ class NoteIndex(FTSModel):
             pass
 
     class Meta:
-        table_name = 'notes_index'
+        table_name = 'notes_pyjoplin_index'
         database = database
         # Use the porter stemming algorithm to tokenize content.
         options = {'tokenize': 'porter'}
