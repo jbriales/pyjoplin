@@ -187,7 +187,7 @@ class Note(BaseModel):
                     notification.show(
                         "Notebook changed",
                         note_title=self.title,
-                        summary='Changed from #%s to #%s' % (previous_notebook.title, notebook.title)
+                        message='Changed from #%s to #%s' % (previous_notebook.title, notebook.title)
                     )
                 self.parent = notebook.id
             except Folder.DoesNotExist:
