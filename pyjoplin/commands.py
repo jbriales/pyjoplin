@@ -40,6 +40,8 @@ def rebuild_fts_index():
     if config.DO_NOTIFY:
         notification.show("Rebuilt index", message="FTS index populated from scratch")
 
+    return True
+
 
 def find_empty_notes(delete=False):
     """
