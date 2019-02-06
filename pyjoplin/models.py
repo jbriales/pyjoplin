@@ -9,7 +9,7 @@ from pyjoplin import notification
 from pyjoplin.configuration import config
 
 
-path_database = os.path.expanduser('~/.config/joplin-desktop/database.sqlite')
+path_database = os.path.expanduser('~/.config/joplin/database.sqlite')
 database = SqliteExtDatabase(path_database, **{})
 
 
