@@ -114,12 +114,13 @@ def setup():
         notification.show("Setup succeeded")
 
 
-def new(title, notebook_name='search'):
+def new(title, notebook_name='search', body=''):
     """
     Create new note in notebook
     :param title:
-    :param notebook:
-    :return:
+    :param notebook_name: optional
+    :param body: optional
+    :return: new_note.id
     """
     # Retrieve notebook id
     try:
@@ -137,6 +138,7 @@ def new(title, notebook_name='search'):
     current_timestamp_sec = time.time()
     uint_current_timestamp_msec = int(current_timestamp_sec * 1000)
     new_note = Note(
+        body=body,
         created_time=uint_current_timestamp_msec,
         id=uid,
         parent=notebook.id,
