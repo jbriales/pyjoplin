@@ -2,6 +2,7 @@
 import os
 import unittest
 
+from pyjoplin import commands
 from pyjoplin.models import Note, NoteIndex, Folder
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +28,21 @@ class TestModelNote(unittest.TestCase):
         note = Note()
         with self.assertRaises(Folder.DoesNotExist) as cm:
             note.from_file(path_to_test_note)
+
+    def test_note_to_file_with_unicode(self):
+        test_title = 'pyjoplin_test test_note_to_file_with_unicode'
+        test_body = u"This is a unicode string: \u2192"
+
+        note_id = commands.new(test_title, 'test', body=test_body)
+        new_note = Note.get(Note.id == note_id)
+
+        path_tempfile = '/tmp/pyjoplin/test_note_to_file_with_unicode'
+        new_note.to_file(path_tempfile)
+
+        backup_body = new_note.body
+        new_note.from_file(path_tempfile)
+
+        self.assertEqual(new_note.body, backup_body)
 
 
 if __name__ == '__main__':
