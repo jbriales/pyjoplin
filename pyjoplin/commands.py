@@ -62,7 +62,18 @@ def find_empty_notes(delete=False):
                     print('Deleted')
 
 
+def substitute_search_column_aliases(search_str):
+    import re
+    # Substitute 't:' (after beginning of string or space) by 'title:'
+    search_str = re.sub(r'(^| )t:', r'\1title:', search_str)
+    # Substitute 'b:' (after beginning of string or space) by 'body:'
+    search_str = re.sub(r'(^| )b:', r'\1body:', search_str)
+    return search_str
+
+
 def search(search_str):
+    search_str = substitute_search_column_aliases(search_str)
+
     # Search query in the FTS table
     with db.atomic():
         found_index_notes = (

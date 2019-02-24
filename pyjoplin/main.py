@@ -81,13 +81,6 @@ def test():
         print_red("Failed! See traceback for details:")
         print(traceback.format_exc())
 
-    # Check fulltext search works
-    # NOTE: Index should be updated upon .save()
-    print("Check test note was indexed in the FTS table...")
-    found_index_notes = search(test_query)
-    assert len(found_index_notes) == 1
-    print_green("... succeeded!")
-
     # Check imfeelinglucky works
     print("Check imfeelinglucky functionality...")
     stub = imfeelinglucky(new_note.id)
