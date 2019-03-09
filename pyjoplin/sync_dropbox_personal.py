@@ -18,6 +18,9 @@ if sys.version.startswith('2'):
 
 import dropbox
 
+# pyjoplin dependencies
+from pyjoplin.models import Settings
+
 # OAuth2 access token.  TODO: login etc.
 TOKEN = ''
 
@@ -43,12 +46,16 @@ def main():
     directories, and avoids duplicate uploads by comparing size and
     mtime with the server.
     """
+
+    # Get Dropbox API token from Joplin database
+    setting = Settings.get(Settings.key == "sync.7.auth")
+    token = setting.value
+
+    dbx = dropbox.Dropbox(token)
+
     args = parser.parse_args()
     if sum([bool(b) for b in (args.yes, args.no, args.default)]) > 1:
         print('At most one of --yes, --no, --default is allowed')
-        sys.exit(2)
-    if not args.token:
-        print('--token is mandatory')
         sys.exit(2)
 
     folder = args.folder
@@ -61,8 +68,6 @@ def main():
     elif not os.path.isdir(rootdir):
         print(rootdir, 'is not a folder on your filesystem')
         sys.exit(1)
-
-    dbx = dropbox.Dropbox(args.token)
 
     for dn, dirs, files in os.walk(rootdir):
         subfolder = dn[len(rootdir):].strip(os.path.sep)
