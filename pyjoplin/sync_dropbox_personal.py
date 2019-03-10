@@ -19,7 +19,7 @@ if sys.version.startswith('2'):
 import dropbox
 
 # pyjoplin dependencies
-from pyjoplin.models import Settings
+from pyjoplin.models import database as db, Folder, Note, Settings
 
 # OAuth2 access token.  TODO: login etc.
 TOKEN = ''
@@ -52,6 +52,15 @@ def main():
     token = setting.value
 
     dbx = dropbox.Dropbox(token)
+
+    # Get list of notes in Facebook notebook
+    notebook = Folder.get(Folder.title == 'fb')
+    fb_notebook_id = notebook.id
+    # NOTE: If fb folder does not exist, will throw FolderDoesNotExist
+    # TODO: Catch it
+    query = Note.select().where(Note.parent == fb_notebook_id)
+    with db.atomic():
+        fb_note_ids = [note.id for note in query]
 
     args = parser.parse_args()
     if sum([bool(b) for b in (args.yes, args.no, args.default)]) > 1:
