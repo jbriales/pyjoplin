@@ -195,7 +195,7 @@ def edit(uid):
     note.to_file(path_tempfile)
 
     # Open file with editor
-    cmd_str = config.EDITOR_CALL_TEMPLATE % path_tempfile
+    cmd_str = config.EDITOR_CALL_TEMPLATE.format(title=note.title, path=path_tempfile)
     proc = subprocess.Popen(
         cmd_str, shell=True,
         # NOTE: This is needed for non-gedit editors, but DISPLAY seems to be giving issues
