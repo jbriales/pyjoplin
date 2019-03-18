@@ -14,12 +14,13 @@ class Config:
     # Files
     PATH_ICON = resource_filename('pyjoplin', 'images/pyjoplin-64.png')
 
-    EDITOR_CALL_TEMPLATE = 'xfce4-terminal --disable-server --title="note - {title}" -e \'vim "{path}"\''
+    # Define template for inputs PATH and TITLE (optional)
+    # EDITOR_CALL_TEMPLATE = 'xfce4-terminal --disable-server --title="note - {title}" -e \'vim "{path}"\''
     # EDITOR_CALL_TEMPLATE = 'xfce4-terminal --disable-server -e \'vim "%s"\''
-    # EDITOR_CALL_TEMPLATE = r'gvim "%s"'  # substitute file path as EDITOR_TEMPLATE % filepath
-    # EDITOR_CALL_TEMPLATE = r'gedit -s "%s" +'  # substitute file path as EDITOR_TEMPLATE % filepath
-    # EDITOR_CALL_TEMPLATE = 'remarkable %s'  # substitute file path as EDITOR_TEMPLATE % filepath
-    # EDITOR_CALL_TEMPLATE = '/home/jesus/.local/bin/retext %s'  # substitute file path as EDITOR_TEMPLATE % filepath
+    # EDITOR_CALL_TEMPLATE = 'gvim "{path}"'  # substitute file path as EDITOR_TEMPLATE % filepath
+    EDITOR_CALL_TEMPLATE = 'gedit -s "{path}" +'
+    # EDITOR_CALL_TEMPLATE = 'remarkable {path}'
+    # EDITOR_CALL_TEMPLATE = '/home/jesus/.local/bin/retext {path}'
 
     # Use desktop notifications for pyjoplin actions
     DO_NOTIFY = True
