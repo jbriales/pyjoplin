@@ -33,6 +33,13 @@ parser.add_argument('--no', '-n', action='store_true',
 parser.add_argument('--default', '-d', action='store_true',
                     help='Take default answer on all questions')
 
+
+# Get Dropbox API token from Joplin database
+setting = Settings.get(Settings.key == "sync.7.auth")
+token = setting.value
+dbx = dropbox.Dropbox(token)
+
+
 def main():
     """Main program.
     Parse command line, then iterate over files and directories under
@@ -40,13 +47,6 @@ def main():
     directories, and avoids duplicate uploads by comparing size and
     mtime with the server.
     """
-
-    # Get Dropbox API token from Joplin database
-    setting = Settings.get(Settings.key == "sync.7.auth")
-    token = setting.value
-
-    dbx = dropbox.Dropbox(token)
-
     # Get list of notes in Facebook notebook
     # These will be skipped in synchronization
     notebook = Folder.get(Folder.title == 'fb')
