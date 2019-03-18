@@ -54,6 +54,7 @@ def main():
     dbx = dropbox.Dropbox(token)
 
     # Get list of notes in Facebook notebook
+    # These will be skipped in synchronization
     notebook = Folder.get(Folder.title == 'fb')
     fb_notebook_id = notebook.id
     # NOTE: If fb folder does not exist, will throw FolderDoesNotExist
