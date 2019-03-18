@@ -21,17 +21,11 @@ import dropbox
 # pyjoplin dependencies
 from pyjoplin.models import database as db, Folder, Note, Settings
 
-# OAuth2 access token.  TODO: login etc.
-TOKEN = ''
-
 parser = argparse.ArgumentParser(description='Sync ~/Downloads to Dropbox')
-parser.add_argument('folder', nargs='?', default='Downloads',
+parser.add_argument('folder', nargs='?', default='',
                     help='Folder name in your Dropbox')
-parser.add_argument('rootdir', nargs='?', default='~/Downloads',
+parser.add_argument('rootdir', nargs='?', default='~/Dropbox/Apps/Joplin/',
                     help='Local directory to upload')
-parser.add_argument('--token', default=TOKEN,
-                    help='Access token '
-                    '(see https://www.dropbox.com/developers/apps)')
 parser.add_argument('--yes', '-y', action='store_true',
                     help='Answer yes to all questions')
 parser.add_argument('--no', '-n', action='store_true',
