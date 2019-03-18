@@ -40,6 +40,21 @@ token = setting.value
 dbx = dropbox.Dropbox(token)
 
 
+def list_all_files(dbx):
+    res = dbx.files_list_folder(
+        '',
+        recursive=True,
+        include_deleted=True
+    )
+    all_entries = res.entries
+
+    while res.has_more:
+        res = dbx.files_list_folder_continue(res.cursor)
+        all_entries += res.entries
+
+    return all_entries
+
+
 def main():
     """Main program.
     Parse command line, then iterate over files and directories under
