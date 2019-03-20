@@ -7,6 +7,7 @@ from peewee import *
 from playhouse.sqlite_ext import *
 from pyjoplin import notification
 from pyjoplin.configuration import config
+from pyjoplin.utils import time_joplin
 
 
 path_database = os.path.expanduser('~/.config/joplin/database.sqlite')
@@ -218,6 +219,14 @@ class Note(BaseModel):
 
     def delete_instance(self, *args, **kwargs):
         NoteIndex.remove_note(self)
+        try:
+            # Register item deletion to be synced
+            deletion_item = DeletedItems.create(deleted_time=time_joplin(), item=self.id, item_type=1, sync_target=7)
+        except:
+            notification.show_error(
+                "DeletedItems table",
+                message='Creating deletion item for Dropbox sync\nNote: %s' % (self.title)
+            )
         return super(Note, self).delete_instance(*args, **kwargs)
 
     class Meta:
