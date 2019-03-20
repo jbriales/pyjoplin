@@ -3,13 +3,13 @@
 import inspect
 import os
 import subprocess
-import time
 
 from peewee import fn, Entity
 
 from pyjoplin.models import Note, NoteIndex, Folder, database as db
 from pyjoplin.configuration import config
 from pyjoplin import notification
+from pyjoplin.utils import time_joplin
 
 
 def rebuild_fts_index():
@@ -146,8 +146,7 @@ def new(title, notebook_name='search', body=''):
     import uuid
     uid = str(uuid.uuid4()).replace('-', '')
     # Get current time in Joplin format (int epoch in milliseconds)
-    current_timestamp_sec = time.time()
-    uint_current_timestamp_msec = int(current_timestamp_sec * 1000)
+    uint_current_timestamp_msec = time_joplin()
     new_note = Note(
         body=body,
         created_time=uint_current_timestamp_msec,
