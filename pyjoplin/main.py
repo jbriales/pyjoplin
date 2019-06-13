@@ -83,6 +83,30 @@ delete.parser.add_argument(
     help="Note uid (docid)"
 )
 
+
+def cli_search(search_str):
+    if isinstance(search_str, list):
+        # For case coming from CLI
+        search_str = ' '.join(search_str)
+
+    found_notes = search(search_str)
+    if not found_notes:
+        print('No notes found')
+    else:
+        for idx, note in enumerate(found_notes):
+            print("{idx}: {title}".format(idx=idx, title=note['title']))
+
+
+cli_search.parser = subparsers.add_parser(
+    'search', description=cli_search.__doc__)
+cli_search.parser.add_argument(
+    'search_str',
+    type=six.text_type,
+    nargs='+',
+    help="The query for the FTS search."
+)
+cli_search.parser.set_defaults(func=cli_search)
+
 toy.parser = subparsers.add_parser(
     'toy', description=toy.__doc__)
 toy.parser.add_argument(
@@ -102,7 +126,6 @@ find_empty_notes.parser.add_argument(
     help="Delete found empty notes",
     action='store_true'
 )
-
 
 argcomplete.autocomplete(parser)
 
