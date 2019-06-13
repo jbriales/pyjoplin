@@ -259,6 +259,9 @@ def edit(uid):
 
 
 def find_title(title):
+    if isinstance(title, list):
+        # For case coming from CLI
+        title = ' '.join(title)
     try:
         note = Note.get(Note.title == title)
         try:

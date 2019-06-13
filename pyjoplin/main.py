@@ -51,6 +51,8 @@ find_title.parser = subparsers.add_parser(
 find_title.parser.set_defaults(func=find_title)
 find_title.parser.add_argument(
     'title',
+    type=six.text_type,
+    nargs='+',
     help="Note's title to search (by exact match)"
 )
 
