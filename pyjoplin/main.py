@@ -100,7 +100,7 @@ def cli_search(search_str):
         print('No notes found')
     else:
         for idx, note in enumerate(found_notes):
-            print("{idx}: {title}".format(idx=idx, title=note['title']))
+            print(note['title'])
 
 
 cli_search.parser = subparsers.add_parser(
