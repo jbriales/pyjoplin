@@ -85,6 +85,12 @@ delete.parser.add_argument(
 
 
 def cli_search(search_str):
+    """
+    Search input query into FTS tables in Joplin database
+    Prints titles for matching notes
+
+    :param string or list-of-strings:
+    """
     if isinstance(search_str, list):
         # For case coming from CLI
         search_str = ' '.join(search_str)
