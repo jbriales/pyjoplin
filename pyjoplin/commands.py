@@ -261,8 +261,15 @@ def edit(uid):
 def find_title(title):
     try:
         note = Note.get(Note.title == title)
+        try:
+            notebook = Folder.get(Folder.id == note.parent)
+        except Folder.DoesNotExist:
+            notification.show_error("Notebook not found", message='nb id %s' % note.parent)
+            raise Folder.DoesNotExist
+
         print(note.id)
         print(note.title)
+        print("#"+notebook.title)
         print(note.body)
     except:
         print("No exact match found for query")
