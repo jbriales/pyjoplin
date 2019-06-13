@@ -51,7 +51,7 @@ find_title.parser = subparsers.add_parser(
 find_title.parser.set_defaults(func=find_title)
 find_title.parser.add_argument(
     'title',
-    help="Note title to search"
+    help="Note's title to search (by exact match)"
 )
 
 imfeelinglucky.parser = subparsers.add_parser(
