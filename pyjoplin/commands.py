@@ -278,6 +278,17 @@ def find_title(title):
         print("No exact match found for query")
 
 
+def edit_by_title(title):
+    if isinstance(title, list):
+        # For case coming from CLI
+        title = ' '.join(title)
+    try:
+        note = Note.get(Note.title == title.rstrip())
+        edit(note.id)
+    except:
+        print("No exact match found for query")
+
+
 def find_notebook(name):
     try:
         notebook = Folder.get(Folder.title == name)

@@ -46,6 +46,18 @@ edit.parser.add_argument(
     help="Note uid (docid)"
 )
 
+
+edit_by_title.parser = subparsers.add_parser(
+    'edit-by-title', description=edit_by_title.__doc__)
+edit_by_title.parser.set_defaults(func=edit_by_title)
+edit_by_title.parser.add_argument(
+    'title',
+    type=six.text_type,
+    nargs='+',
+    help="Note's title to search (by exact match)"
+)
+
+
 find_title.parser = subparsers.add_parser(
     'find-title', description=find_title.__doc__)
 find_title.parser.set_defaults(func=find_title)
