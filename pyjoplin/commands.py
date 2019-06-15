@@ -274,8 +274,8 @@ def find_title(title):
         print(note.title)
         print("#"+notebook.title)
         print(note.body)
-    except:
-        print("No exact match found for query")
+    except Note.DoesNotExist:
+        print("No exact match found for title query " + title)
 
 
 def edit_by_title(title):
@@ -284,9 +284,9 @@ def edit_by_title(title):
         title = ' '.join(title)
     try:
         note = Note.get(Note.title == title.rstrip())
-        edit(note.id)
-    except:
-        print("No exact match found for query")
+        edit(note.uid)
+    except Note.DoesNotExist:
+        print("No exact match found for title query " + title)
 
 
 def find_notebook(name):
@@ -294,7 +294,7 @@ def find_notebook(name):
         notebook = Folder.get(Folder.title == name)
         print(notebook.id)
         print(notebook.title)
-    except:
+    except Note.DoesNotExist:
         print("No exact match found for query")
 
 
