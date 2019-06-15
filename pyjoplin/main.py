@@ -114,7 +114,7 @@ def cli_search(search_str):
         # TODO: Move this to a different cli function instead, and handle switch logic from bash
         with db.atomic():
             for note in Note.select():
-                print(note.title)
+                print(note.title.encode('utf-8'))
         return 0
 
     found_notes = search(search_str)
