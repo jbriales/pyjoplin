@@ -109,6 +109,14 @@ def cli_search(search_str):
         # For case coming from CLI
         search_str = ' '.join(search_str)
 
+    if not search_str:
+        # Special handling of empty query: Return all titles
+        # TODO: Move this to a different cli function instead, and handle switch logic from bash
+        with db.atomic():
+            for note in Note.select():
+                print(note.title)
+        return 0
+
     found_notes = search(search_str)
     if not found_notes:
         print('No notes found')
@@ -122,7 +130,7 @@ cli_search.parser = subparsers.add_parser(
 cli_search.parser.add_argument(
     'search_str',
     type=six.text_type,
-    nargs='+',
+    nargs='*',
     help="The query for the FTS search."
 )
 cli_search.parser.set_defaults(func=cli_search)
