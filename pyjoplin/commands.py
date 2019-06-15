@@ -284,7 +284,7 @@ def edit_by_title(title):
         title = ' '.join(title)
     try:
         note = Note.get(Note.title == title.rstrip())
-        edit(note.uid)
+        edit(note.id)
     except Note.DoesNotExist:
         print("No exact match found for title query " + title)
 
