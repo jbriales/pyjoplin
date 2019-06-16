@@ -97,6 +97,14 @@ delete.parser.add_argument(
     help="Note uid (docid)"
 )
 
+list_conflicts.parser = subparsers.add_parser(
+    'list-conflicts', description=list_conflicts.__doc__)
+list_conflicts.parser.set_defaults(func=list_conflicts)
+
+rename_conflicting_notes.parser = subparsers.add_parser(
+    'mark-conflicts', description=rename_conflicting_notes.__doc__)
+rename_conflicting_notes.parser.set_defaults(func=rename_conflicting_notes)
+
 
 def cli_search(search_str):
     """

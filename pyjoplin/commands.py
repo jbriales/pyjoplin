@@ -62,6 +62,34 @@ def find_empty_notes(delete=False):
                     print('Deleted')
 
 
+def rename_conflicting_notes():
+    notes = Note.select().where(Note.is_conflict == 1)
+    with db.atomic():
+        for note in notes:
+            if not note.title.endswith('(CONFLICT)'):
+                note.title = note.title + ' (CONFLICT)'
+                num_saved_notes = note.save()
+                if num_saved_notes != 1:
+                    notification.show_error("Renaming conflicting note", note.title)
+    return True
+
+
+def list_conflicts():
+    """
+    List conflicting notes
+
+    :return:
+    """
+
+    notes = Note.select().where(Note.is_conflict == 1)
+    print("List of conflicting notes:")
+    with db.atomic():
+        for note in notes:
+            print('-----------------------------')
+            print('%s %s' % (note.id, note.title))
+    return True
+
+
 def substitute_search_column_aliases(search_str):
     import re
     # Substitute 't:' (after beginning of string or space) by 'title:'
