@@ -233,7 +233,7 @@ def edit(uid):
             '--title',
             'pyjoplin - {title}'.format(title=note.title),
             '-e',
-            'bash -c "source ~/.bashrc && vimx \'{path}\'"'.format(path=path_tempfile)
+            'bash -c "source ~/.bashrc && unset PYTHONPATH && vimx \'{path}\' || vi \'{path}\'"'.format(path=path_tempfile)
         ],
         stdout=subprocess.PIPE
     )
