@@ -15,9 +15,9 @@ class Config:
     PATH_ICON = resource_filename('pyjoplin', 'images/pyjoplin-64.png')
 
     # Define template for inputs PATH and TITLE (optional)
-    # EDITOR_CALL_TEMPLATE = 'xfce4-terminal --disable-server --title="note - {title}" -e \'vim "{path}"\''
+    # EDITOR_CALL_TEMPLATE = 'xfce4-terminal --disable-server --title="note - {title}" -e "bash -c \"source ~/.bashrc && vim \'{path}\'\""'
     # EDITOR_CALL_TEMPLATE = 'xfce4-terminal --disable-server -e \'vim "%s"\''
-    EDITOR_CALL_TEMPLATE = 'gvim -f "{path}"'  # NOTE: -f is important to open in fg and not bg
+    # EDITOR_CALL_TEMPLATE = 'gvim -f "{path}"'  # NOTE: -f is important to open in fg and not bg
     # EDITOR_CALL_TEMPLATE = 'gedit -s "{path}" +'
     # EDITOR_CALL_TEMPLATE = 'remarkable {path}'
     # EDITOR_CALL_TEMPLATE = '/home/jesus/.local/bin/retext {path}'

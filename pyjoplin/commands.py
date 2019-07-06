@@ -222,17 +222,31 @@ def edit(uid):
     note.to_file(path_tempfile)
 
     # Open file with editor
-    cmd_str = config.EDITOR_CALL_TEMPLATE.format(title=note.title, path=path_tempfile)
+    # NOTE: Stop using template, this command gets too complicated for a single string
+    #       It's better to have a list of inputs to build the last complicated command
+    #       Nesting bash becomes necessary to execute source for non-interactive customization
     proc = subprocess.Popen(
-        cmd_str, shell=True,
-        # NOTE: This is needed for non-gedit editors, but DISPLAY seems to be giving issues
-        # env=dict(
-        #     os.environ,
-        #     PYTHONPATH='',  # avoid issues when calling Python3 scripts from Python2
-        #     DISPLAY=":0.0"  # ensure some GUI apps catch the right display
-        # ),
+        [
+            'xfce4-terminal',
+            '--disable-server',
+            '--title',
+            'pyjoplin - {title}'.format(title=note.title),
+            '-e',
+            'bash -c "source ~/.bashrc && vim \'{path}\'"'.format(path=path_tempfile)
+        ],
         stdout=subprocess.PIPE
     )
+    # cmd_str = config.EDITOR_CALL_TEMPLATE.format(title=note.title, path=path_tempfile)
+    # proc = subprocess.Popen(
+    #     cmd_str, shell=True,
+    #     # NOTE: This is needed for non-gedit editors, but DISPLAY seems to be giving issues
+    #     # env=dict(
+    #     #     os.environ,
+    #     #     PYTHONPATH='',  # avoid issues when calling Python3 scripts from Python2
+    #     #     DISPLAY=":0.0"  # ensure some GUI apps catch the right display
+    #     # ),
+    #     stdout=subprocess.PIPE
+    # )
 
     # Loop during edition to save incremental changes
     import time
