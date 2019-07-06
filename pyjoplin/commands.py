@@ -225,6 +225,7 @@ def edit(uid):
     # NOTE: Stop using template, this command gets too complicated for a single string
     #       It's better to have a list of inputs to build the last complicated command
     #       Nesting bash becomes necessary to execute source for non-interactive customization
+    # NOTE: Using vimx since aliases do not seem to apply in non-interactive (even if I define it inside bashrc!?)
     proc = subprocess.Popen(
         [
             'xfce4-terminal',
@@ -232,7 +233,7 @@ def edit(uid):
             '--title',
             'pyjoplin - {title}'.format(title=note.title),
             '-e',
-            'bash -c "source ~/.bashrc && vim \'{path}\'"'.format(path=path_tempfile)
+            'bash -c "source ~/.bashrc && vimx \'{path}\'"'.format(path=path_tempfile)
         ],
         stdout=subprocess.PIPE
     )
