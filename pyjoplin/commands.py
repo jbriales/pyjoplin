@@ -242,8 +242,10 @@ def edit(uid):
             '-e',
             'bash',
             '-c',
-            # NOTE: unset PYTHONPATH seems necessary for this to work when called through ulauncher extension
-            'unset PYTHONPATH && vimx \'{path}\''.format(path=path_tempfile)
+            # NOTE: `source ~/.bashrc` is necessary to customize interactive shell for vim
+            # e.g. to disable "flow control characters"
+            # NOTE: `unset PYTHONPATH` seems necessary for this to work when called through ulauncher extension
+            'source ~/.bashrc && unset PYTHONPATH && vimx \'{path}\''.format(path=path_tempfile)
             # NOTE: Version below works when called from terminal,
             # e.g. `pyjoplin edit 170b3c8de5034f7c8023a6a39f02219c`
             # but it immediately exits when called via ulauncher
