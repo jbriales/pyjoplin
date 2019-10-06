@@ -227,13 +227,28 @@ def edit(uid):
     #       Nesting bash becomes necessary to execute source for non-interactive customization
     # NOTE: Using vimx since aliases do not seem to apply in non-interactive (even if I define it inside bashrc!?)
     proc = subprocess.Popen(
+        # [
+        #     'xfce4-terminal',
+        #     '--disable-server',
+        #     '--title',
+        #     'pyjoplin - {title}'.format(title=note.title),
+        #     '-e',
+        #     'bash -c "source ~/.bashrc && unset PYTHONPATH && vimx \'{path}\' || vi \'{path}\'"'.format(path=path_tempfile)
+        # ],
         [
-            'xfce4-terminal',
-            '--disable-server',
-            '--title',
+            'urxvt',
+            '-title',
             'pyjoplin - {title}'.format(title=note.title),
             '-e',
-            'bash -c "source ~/.bashrc && unset PYTHONPATH && vimx \'{path}\' || vi \'{path}\'"'.format(path=path_tempfile)
+            'bash',
+            '-c',
+            # NOTE: unset PYTHONPATH seems necessary for this to work when called through ulauncher extension
+            'unset PYTHONPATH && vimx \'{path}\''.format(path=path_tempfile)
+            # NOTE: Version below works when called from terminal,
+            # e.g. `pyjoplin edit 170b3c8de5034f7c8023a6a39f02219c`
+            # but it immediately exits when called via ulauncher
+            # 'vimx',
+            # '{path}'.format(path=path_tempfile)
         ],
         stdout=subprocess.PIPE
     )
