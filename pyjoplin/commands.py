@@ -236,7 +236,7 @@ def edit(uid):
         #     'bash -c "source ~/.bashrc && unset PYTHONPATH && vimx \'{path}\' || vi \'{path}\'"'.format(path=path_tempfile)
         # ],
         [
-            'urxvt',
+            'urxvt256c',
             '-title',
             'pyjoplin - {title}'.format(title=note.title),
             '-e',
