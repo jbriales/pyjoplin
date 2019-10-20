@@ -143,6 +143,26 @@ cli_search.parser.add_argument(
 )
 cli_search.parser.set_defaults(func=cli_search)
 
+
+def cli_get(ids):
+    """
+    Prints titles for notes' ids
+    """
+    for note in get_notes_by_id(ids, ordered=True):
+        print(note['title'])
+
+
+cli_get.parser = subparsers.add_parser(
+    'get', description=cli_get.__doc__)
+cli_get.parser.add_argument(
+    'ids',
+    type=six.text_type,
+    nargs='*',
+    help="List of uids"
+)
+cli_get.parser.set_defaults(func=cli_get)
+
+
 toy.parser = subparsers.add_parser(
     'toy', description=toy.__doc__)
 toy.parser.add_argument(
