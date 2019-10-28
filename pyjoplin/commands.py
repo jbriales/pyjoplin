@@ -40,8 +40,6 @@ def rebuild_fts_index():
     if config.DO_NOTIFY:
         notification.show("Rebuilt index", message="FTS index populated from scratch")
 
-    return True
-
 
 def find_empty_notes(delete=False):
     """
@@ -71,7 +69,6 @@ def rename_conflicting_notes():
                 num_saved_notes = note.save()
                 if num_saved_notes != 1:
                     notification.show_error("Renaming conflicting note", note.title)
-    return True
 
 
 def list_conflicts():
@@ -87,7 +84,6 @@ def list_conflicts():
         for note in notes:
             print('-----------------------------')
             print('%s %s' % (note.id, note.title))
-    return True
 
 
 def substitute_search_column_aliases(search_str):
@@ -212,7 +208,7 @@ def edit(uid):
     path_sentinel = os.path.join(config.PATH_TEMP, '%s' % uid)
     if os.path.exists(path_sentinel):
         notification.show_error("Note is already under edit", note.title, note.id)
-        return False
+        raise Exception('Note is already under edit')
     else:
         # Create sentinel to block this note
         open(path_sentinel, 'a').close()
@@ -287,7 +283,7 @@ def edit(uid):
         print("Output:")
         output = proc.stdout.read().decode('utf-8')
         print(output)
-        raise Exception
+        raise Exception('ERROR during edition')
 
     # Save edited file content to Notes table
     note.from_file(path_tempfile)

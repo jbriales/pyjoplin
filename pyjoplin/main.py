@@ -196,8 +196,12 @@ def main():
     kwargs = vars(args)
     func = kwargs.pop('func')
 
-    successful = func(**kwargs)
-    sys.exit(0 if successful else 1)
+    try:
+        func(**kwargs)
+        sys.exit(0)
+    except Exception as e:
+        print("Finished with exception: %s" % e.message)
+        sys.exit(1)
 
 
 if __name__ == '__main__':
