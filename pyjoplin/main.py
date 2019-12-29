@@ -123,16 +123,13 @@ def cli_search(search_str):
         with db.atomic():
             for note in Note.select():
                 print(note.title.encode('utf-8'))
-        return False
 
     found_notes = search(search_str)
     if not found_notes:
-        print('No notes found')
-        return False
+        raise Exception('No notes found')
     else:
         for idx, note in enumerate(found_notes):
             print(note['title'])
-        return True
 
 
 cli_search.parser = subparsers.add_parser(
