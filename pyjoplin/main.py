@@ -4,6 +4,8 @@
 Interface Joplin via python
 """
 
+from __future__ import print_function
+
 import argcomplete, argparse
 import six
 import sys
@@ -199,7 +201,7 @@ def main():
         func(**kwargs)
         sys.exit(0)
     except Exception as e:
-        print("Finished with exception: %s" % e.message)
+        print("Finished with exception: %s" % e.message, file=sys.stderr)
         sys.exit(1)
 
 
