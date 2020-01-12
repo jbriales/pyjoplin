@@ -3,12 +3,20 @@
 Notification wrapper
 """
 import notify2
+import os.path
+import sys
 
 from pyjoplin.configuration import config
 
 
 # Start notification service for pyjoplin
-notify2.init("pyjoplin")
+if os.path.isfile(os.path.expanduser('~/var/pyjoplin/SKIP_NOTIFICATIONS')):
+    # NOTE:
+    # `mkdir -p ~/var/pyjoplin && touch ~/var/pyjoplin/SKIP_NOTIFICATIONS` to disable notifications
+    # `rm ~/var/pyjoplin/SKIP_NOTIFICATIONS` to enable again
+    print('Skipping notify2 setup because ~/var/pyjoplin/SKIP_NOTIFICATIONS exists', file=sys.stderr)
+else:
+    notify2.init("pyjoplin")
 
 
 def show(summary, note_title='', message=''):
@@ -21,7 +29,10 @@ def show(summary, note_title='', message=''):
         message=full_message,
         icon=config.PATH_ICON
     )
-    notification.show()
+    try:
+        notification.show()
+    except notify2.UninittedError:
+        print('Skipping notification because notify2.init() was not run successfully')
 
 
 def show_error(summary, note_title='', message=''):
