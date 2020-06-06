@@ -201,7 +201,8 @@ def main():
         func(**kwargs)
         sys.exit(0)
     except Exception as e:
-        print("Finished with exception message: %s\n" % e.message, file=sys.stderr)
+        if(hasattr(e, 'message')):
+            print("Finished with exception message: %s\n" % e.message, file=sys.stderr)
         print("Raising exception again for details:", file=sys.stderr)
         raise e
         sys.exit(1)
