@@ -3,6 +3,7 @@
 'build' 'compile'
 'communications' 'share'
 'dict' 'dictionary'
+'document' 'doc'
 'forecast' 'prediction'
 'help' 'support' 'contact'
 'md' 'Markdown'
