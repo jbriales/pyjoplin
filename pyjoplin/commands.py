@@ -4,14 +4,13 @@ import inspect
 import os
 import subprocess
 
-from peewee import fn, Entity
-
-from pyjoplin.models import Note, NoteIndex, Folder, database as db
-from pyjoplin.configuration import config
+from peewee import Entity, fn
+from pkg_resources import resource_filename
 from pyjoplin import notification
+from pyjoplin.configuration import config
+from pyjoplin.models import Folder, Note, NoteIndex, database as db
 from pyjoplin.utils import time_joplin
 
-from pkg_resources import resource_filename
 
 PATH_SYNONYMS = resource_filename("pyjoplin", "synonyms.txt")
 
@@ -116,18 +115,18 @@ def replace_synonyms(search_str):
         the_word: the_set for the_set in sets_of_synonyms for the_word in the_set
     }
 
-    pattern: str = r"(%s)" % "|".join(dict_of_synonyms.keys())
+    pattern: str = r"(?P<word>%s)" % "|".join(dict_of_synonyms.keys())
 
     import re
 
     # Replace any registered synonym into OR-set for SQLite query
     # e.g. py turns into ( py OR python )
-    # return re.sub(
-    #     pattern,
-    #     lambda m: r"(%s)" % r" OR ".join(dict_of_synonyms[m.group(1)]),
-    #     search_str,
-    # )
-    return search_str
+    return re.sub(
+        pattern,
+        lambda m: r"(%s)" % r" OR ".join(dict_of_synonyms[m.group("word")]),
+        search_str,
+    )
+    # return search_str
 
 
 def search(search_str):
