@@ -2,6 +2,7 @@
 'bc' 'BetterCalib'
 'build' 'compile'
 'communications' 'share'
+'development' 'devel' 'dev'
 'dict' 'dictionary'
 'document' 'doc'
 'forecast' 'prediction'
