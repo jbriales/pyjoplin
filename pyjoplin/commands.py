@@ -115,7 +115,7 @@ def replace_synonyms(search_str):
         the_word: the_set for the_set in sets_of_synonyms for the_word in the_set
     }
 
-    pattern: str = r"(?P<word>%s)" % "|".join(dict_of_synonyms.keys())
+    pattern: str = r"(^|\s)(?P<word>%s)(\s|$)" % "|".join(dict_of_synonyms.keys())
 
     import re
 
