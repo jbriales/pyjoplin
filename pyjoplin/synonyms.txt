@@ -1,5 +1,6 @@
 'bash' 'shell' 'terminal' 'command line'
 'bc' 'BetterCalib'
+'benchmark' 'bench'
 'build' 'compile'
 'communications' 'share'
 'development' 'devel' 'dev'
