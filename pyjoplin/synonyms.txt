@@ -19,5 +19,6 @@
 'python' 'py'
 'random' 'rand' 'rnd'
 'tex' 'latex'
+'visualization' 'vis' 'viz'
 'vsc' 'VSCode' 'Visual Studio Code'
 'webpage' 'web page' 'web-page'
