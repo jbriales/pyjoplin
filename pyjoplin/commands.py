@@ -115,7 +115,9 @@ def replace_synonyms(search_str):
         the_word: the_set for the_set in sets_of_synonyms for the_word in the_set
     }
 
-    pattern: str = r"(^|\s)(?P<word>%s)(\s|$)" % "|".join(dict_of_synonyms.keys())
+    pattern: str = r"(?P<pre>^|\s)(?P<word>%s)(?P<post>\s|$)" % "|".join(
+        dict_of_synonyms.keys()
+    )
 
     import re
 
@@ -123,7 +125,9 @@ def replace_synonyms(search_str):
     # e.g. py turns into ( py OR python )
     return re.sub(
         pattern,
-        lambda m: r"(%s)" % r" OR ".join(dict_of_synonyms[m.group("word")]),
+        lambda m: m.group("pre")
+        + r"(%s)" % (r" OR ".join(dict_of_synonyms[m.group("word")]))
+        + m.group("post"),
         search_str,
     )
     # return search_str
