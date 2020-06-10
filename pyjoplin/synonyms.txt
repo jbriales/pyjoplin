@@ -1,7 +1,7 @@
 'analytics' 'anal'
 'bash' 'shell' 'terminal' 'command line'
-'bc' 'BetterCalib'
 'benchmark' 'bench'
+'BetterCalib' 'bc'
 'build' 'compile'
 'calibration' 'calib' 'cal'
 'communications' 'share'
