@@ -6,7 +6,7 @@
 'calibration' 'calib' 'cal'
 'communications' 'share'
 'development' 'devel' 'dev'
-'dict' 'dictionary'
+'dictionary' 'dict'
 'document' 'doc'
 'forecast' 'prediction'
 'help' 'support' 'contact'
