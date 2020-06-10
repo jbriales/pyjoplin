@@ -18,6 +18,7 @@
 'plot' 'plt'
 'python' 'py'
 'random' 'rand' 'rnd'
+'statistics' 'stats' 'stat'
 'tex' 'latex'
 'visualization' 'vis' 'viz'
 'vsc' 'VSCode' 'Visual Studio Code'
