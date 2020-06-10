@@ -2,6 +2,7 @@
 'bc' 'BetterCalib'
 'benchmark' 'bench'
 'build' 'compile'
+'calibration' 'calib' 'cal'
 'communications' 'share'
 'development' 'devel' 'dev'
 'dict' 'dictionary'
