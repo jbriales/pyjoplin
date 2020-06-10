@@ -8,6 +8,7 @@
 'development' 'devel' 'dev'
 'dictionary' 'dict'
 'document' 'doc'
+'evaluation' 'eval'
 'forecast' 'prediction'
 'help' 'support' 'contact'
 'implementation' 'impl'
