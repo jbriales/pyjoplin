@@ -5,6 +5,7 @@
 'boxplot' 'bp'
 'build' 'compile'
 'calibration' 'calib' 'cal'
+'cheatsheet' 'cs'
 'communications' 'share'
 'development' 'devel' 'dev'
 'dictionary' 'dict'
