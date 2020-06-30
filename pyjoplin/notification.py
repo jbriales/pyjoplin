@@ -23,6 +23,7 @@ else:
         notify2.init("pyjoplin")
     except:
         print("Skipping notify2 setup because notifications service seems broken")
+        print("Do `touch ~/var/pyjoplin/SKIP_NOTIFICATIONS` to disable notifications")
 
 
 def show(summary, note_title="", message=""):
