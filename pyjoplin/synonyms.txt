@@ -28,4 +28,5 @@
 'visualization' 'vis' 'viz'
 'vsc' 'VSCode' 'Visual Studio Code'
 'webpage' 'web page' 'web-page'
+'whereis' 'where is'
 'worklog' 'wl'
