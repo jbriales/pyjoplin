@@ -12,6 +12,7 @@
 'dictionary' 'dict'
 'document' 'doc'
 'evaluation' 'eval'
+'F32' 'Fedora32' 'Fedora 32'
 'forecast' 'prediction'
 'help' 'support' 'contact'
 'implementation' 'impl'
