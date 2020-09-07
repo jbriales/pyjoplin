@@ -142,7 +142,7 @@ class Note(BaseModel):
 
     def to_file(self, file_path):
         """
-        Store this note title and body into a text file
+        Store this note title, notebook and body into a text file
         :param file_path:
         :return:
         """
@@ -156,7 +156,7 @@ class Note(BaseModel):
 
     def from_file(self, file_path):
         """
-        Populate this note title and body from a text file
+        Populate this note title, notebook and body from a text file
         NOTE: This does not save the note in the database, just changes its content
         :param file_path:
         :return:
@@ -167,20 +167,19 @@ class Note(BaseModel):
             # Get summary from first line
             self.title = f.readline().strip()
 
-            # Get notebook name from second line (if any)
+            # Get notebook name from second line (must exist)
             notebook_name_line = f.readline().strip()
-            if notebook_name_line:
-                try:
-                    assert notebook_name_line.startswith('#')
-                except AssertionError:
-                    notification.show_error(
-                        "Bad notebook line format",
-                        message='Lines is: %s\nShould start with #' % notebook_name_line
-                    )
-                    raise RuntimeError("Bad notebook line format")
-                notebook_name = notebook_name_line[1:]
-            else:
-                notebook_name = config.DEFAULT_NOTEBOOK_NAME
+            try:
+                assert notebook_name_line.startswith('#')
+            except AssertionError:
+                notification.show_error(
+                    "Bad notebook line format",
+                    message='Lines is: %s\nShould start with #' % notebook_name_line
+                )
+                raise RuntimeError("Bad notebook line format")
+            notebook_name = notebook_name_line[1:]
+
+            # React to notebook changes from text editor
             try:
                 notebook = Folder.get(Folder.title == notebook_name)
                 if self.parent is not None and notebook.id != self.parent:
@@ -197,7 +196,7 @@ class Note(BaseModel):
                     "Notebook not found",
                     message='#%s\nSaving to previous notebook #%s instead' % (notebook_name, previous_notebook.title)
                 )
-
+                
             # Read rest of file as body
             self.body = f.read().strip()
 
