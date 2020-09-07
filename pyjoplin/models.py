@@ -152,7 +152,7 @@ class Note(BaseModel):
             notification.show_error("Notebook not found", message='nb id %s' % self.parent)
             raise Folder.DoesNotExist
         with open(file_path, 'w', encoding='utf-8') as f:
-            f.write("%s\n#%s\n%s\n\n%s" % (self.title, notebook.title, self.id, self.body))
+            f.write(f"{self.title}\n#{notebook.title}\n{self.id}\n\n{self.body}")
 
     def from_file(self, file_path):
         """
