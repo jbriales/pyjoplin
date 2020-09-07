@@ -152,7 +152,7 @@ class Note(BaseModel):
             notification.show_error("Notebook not found", message='nb id %s' % self.parent)
             raise Folder.DoesNotExist
         with open(file_path, 'w', encoding='utf-8') as f:
-            f.write("%s\n#%s\n\n%s" % (self.title, notebook.title, self.body))
+            f.write("%s\n#%s\n%s\n\n%s" % (self.title, notebook.title, self.id, self.body))
 
     def from_file(self, file_path):
         """
@@ -196,7 +196,14 @@ class Note(BaseModel):
                     "Notebook not found",
                     message='#%s\nSaving to previous notebook #%s instead' % (notebook_name, previous_notebook.title)
                 )
-                
+
+            # Get UID from third line (must exist)
+            uid_line = f.readline().strip()
+            assert uid_line == self.id
+
+            # Assert white line afterwards
+            assert not f.readline().strip()
+
             # Read rest of file as body
             self.body = f.read().strip()
 
