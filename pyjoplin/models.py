@@ -163,6 +163,15 @@ class Note(BaseModel):
         """
         # Save new content to Notes table
         # NOTE: FTS entry is automatically updated within .save()
+
+        # Check empty case first, for removal
+        if os.path.getsize(file_path) <= 1:
+            # The file is empty, should trigger removal
+            # NOTE: I don't remember now how removal worked, so trying the below
+            self.title = ''
+            self.body = ''
+            return
+
         with open(file_path, 'r', encoding='utf-8') as f:
             # Get summary from first line
             self.title = f.readline().strip()
