@@ -332,6 +332,9 @@ def edit(uid):
         print("Output:")
         output = proc.stdout.read().decode("utf-8")
         print(output)
+        notification.show_error(
+            "returncode from editor was not 0", note.title, output
+        )
         raise Exception("ERROR during edition")
 
     # Save edited file content to Notes table
