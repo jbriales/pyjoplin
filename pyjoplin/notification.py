@@ -43,8 +43,12 @@ def show(summary, note_title="", message=""):
         print("Skipping notification because notify2.init() was not run successfully")
 
 def show_error(summary, note_title="", message=""):
-    show("ERROR: %s" % summary, note_title, message)
-
+    notification = create_notification(summary, note_title, message)
+    notification.set_urgency(notify2.URGENCY_CRITICAL)
+    try:
+        notification.show()
+    except notify2.UninittedError:
+        print("Skipping notification because notify2.init() was not run successfully")
 
 def show_error_and_raise(summary, note_title="", message=""):
     show_error(summary, note_title, message)
