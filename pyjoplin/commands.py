@@ -268,7 +268,15 @@ def edit(uid):
     path_tempfile = os.path.join(
         config.PATH_TEMP, f"{note.title.replace('/', '_')}.md"
     )
-    if os.path.exists(path_tempfile):
+
+    # Create named symlink to sentinel note
+    # for better readability
+    # NOTE:
+    #   Because of this link, the sentinel is no longer *just* a sentinel.
+    #   Instead, it is a plain text file containing the actual note content.
+    try:
+        os.symlink(path_sentinel, path_tempfile)
+    except FileExistsError:
         notification.show_error("Note file with same name is already under edit", note.title, note.id)
         raise Exception(f"Temp file named {note.title} already exists")
 
