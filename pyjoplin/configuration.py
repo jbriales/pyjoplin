@@ -10,7 +10,7 @@ from pkg_resources import resource_filename
 class Config:
     # Folders
     PATH_CONFIG = os.path.expanduser("~/.config/pyjoplin/")
-    PATH_TEMP = "/tmp/pyjoplin/"
+    PATH_TEMP = os.path.expanduser("~/tmp/pyjoplin/")
     # Files
     PATH_ICON = resource_filename('pyjoplin', 'images/pyjoplin-64.png')
 
@@ -43,6 +43,8 @@ class Config:
                     if exc.errno != errno.EEXIST:
                         raise
 
-
 # Create global config variable
 config = Config()
+
+# Ensure tmp folder exists
+os.makedirs(config.PATH_TEMP, exist_ok=True)
