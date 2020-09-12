@@ -59,6 +59,15 @@ edit_by_title.parser.add_argument(
     help="Note's title to search (by exact match)"
 )
 
+print_for_uid.parser = subparsers.add_parser(
+    'print', description=print_for_uid.__doc__)
+print_for_uid.parser.set_defaults(func=print_for_uid)
+print_for_uid.parser.add_argument(
+    'uid',
+    type=six.text_type,
+    nargs=1,
+    help="Note's UUID"
+)
 
 find_title.parser = subparsers.add_parser(
     'find-title', description=find_title.__doc__)

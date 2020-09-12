@@ -401,6 +401,19 @@ def edit(uid):
     if config.DO_NOTIFY:
         notification.show("Note saved", note.title)
 
+def print_for_uid(uid):
+    """
+    Print note content
+    :param uid:
+    :return: returncode
+    """
+    try:
+        note = Note.get(Note.id == uid)       
+        print(note.to_string())
+        return 0
+    except Note.DoesNotExist:
+        print(f"No note found with id {uid}")
+        return 2
 
 def find_title(title):
     if isinstance(title, list):
@@ -409,8 +422,10 @@ def find_title(title):
     try:
         note = Note.get(Note.title == title)
         print(note.to_string())
+        return 0
     except Note.DoesNotExist:
         print("No exact match found for title query " + title)
+        return 2
 
 
 def edit_by_title(title):
