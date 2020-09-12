@@ -198,6 +198,16 @@ def new(title, notebook_name="personal", body=""):
     :param body: optional
     :return: new_note.id
     """
+
+    # Ensure that note with the same title does not exist already in the database
+    try:
+        note = Note.get(Note.title == title)
+        notification.show_error("Note with same name already exists", note.title)
+        raise Exception(f"Note with same name already exists")
+    except Note.DoesNotExist:
+        # All good, it should not exist
+        pass
+
     # Retrieve notebook id
     try:
         notebook = Folder.get(Folder.title == notebook_name)
