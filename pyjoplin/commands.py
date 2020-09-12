@@ -409,7 +409,7 @@ def print_for_uid(uid):
     """
     try:
         note = Note.get(Note.id == uid)       
-        print(note.to_string())
+        print(note.to_string(), end='')
         return 0
     except Note.DoesNotExist:
         print(f"No note found with id {uid}")
@@ -421,7 +421,7 @@ def find_title(title):
         title = " ".join(title)
     try:
         note = Note.get(Note.title == title)
-        print(note.to_string())
+        print(note.to_string(), end='')
         return 0
     except Note.DoesNotExist:
         print("No exact match found for title query " + title)
