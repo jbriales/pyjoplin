@@ -408,18 +408,7 @@ def find_title(title):
         title = " ".join(title)
     try:
         note = Note.get(Note.title == title)
-        try:
-            notebook = Folder.get(Folder.id == note.parent)
-        except Folder.DoesNotExist:
-            notification.show_error(
-                "Notebook not found", message="nb id %s" % note.parent
-            )
-            raise Folder.DoesNotExist
-
-        print(note.id)
-        print(note.title)
-        print("#" + notebook.title)
-        print(note.body)
+        print(note.to_string())
     except Note.DoesNotExist:
         print("No exact match found for title query " + title)
 
