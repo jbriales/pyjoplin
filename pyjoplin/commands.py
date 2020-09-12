@@ -190,7 +190,7 @@ def setup():
         notification.show("Setup succeeded")
 
 
-def new(title, notebook_name="search", body=""):
+def new(title, notebook_name="personal", body=""):
     """
     Create new note in notebook
     :param title:
