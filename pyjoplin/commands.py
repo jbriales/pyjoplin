@@ -333,19 +333,26 @@ def edit(uid):
     import time
 
     last_modification_time_sec = os.path.getmtime(path_tempfile)
-    while proc.poll() is None:
-        time.sleep(0.5)
-        if os.path.getmtime(path_tempfile) > last_modification_time_sec:
-            last_modification_time_sec = os.path.getmtime(path_tempfile)
+    try:
+        # Sync note under edition with database note in a loop
+        while proc.poll() is None:
+            time.sleep(0.5)
+            if os.path.getmtime(path_tempfile) > last_modification_time_sec:
+                last_modification_time_sec = os.path.getmtime(path_tempfile)
 
-            note.from_file(path_tempfile)
-            num_saved_notes = note.save()
-            if num_saved_notes != 1:
-                notification.show_error(
-                    "Saving note changes during edition", note.title
-                )
-            # else:
-            #     notification.show("Note saved", note.title)
+                note.from_file(path_tempfile)
+                num_saved_notes = note.save()
+                if num_saved_notes != 1:
+                    notification.show_error(
+                        "Saving note changes during edition", note.title
+                    )
+                # else:
+                #     notification.show("Note saved", note.title)
+    except:
+        notification.show_error(
+            "During note edition sync loop", note.title
+        )
+        raise Exception("ERROR during editor-database sync loop")
 
     returncode = proc.wait()
     if returncode != 0:
