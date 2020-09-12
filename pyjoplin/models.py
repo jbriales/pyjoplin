@@ -140,19 +140,22 @@ class Note(BaseModel):
             repr_notebook = None
         return "Note: %s, nb: %s, title: %s, body: %s" % (self.id, repr_notebook, self.title, repr_body)
 
+    def to_string(self):
+        try:
+            notebook = Folder.get(Folder.id == self.parent)
+        except Folder.DoesNotExist:
+            notification.show_error("Notebook not found", message='nb id %s' % self.parent)
+            raise Folder.DoesNotExist
+        return f"{self.title}\n#{notebook.title}\n{self.id}\n\n{self.body}"
+
     def to_file(self, file_path):
         """
         Store this note title, notebook and body into a text file
         :param file_path:
         :return:
         """
-        try:
-            notebook = Folder.get(Folder.id == self.parent)
-        except Folder.DoesNotExist:
-            notification.show_error("Notebook not found", message='nb id %s' % self.parent)
-            raise Folder.DoesNotExist
         with open(file_path, 'w', encoding='utf-8') as f:
-            f.write(f"{self.title}\n#{notebook.title}\n{self.id}\n\n{self.body}")
+            f.write(self.to_string())
 
     def from_file(self, file_path):
         """
@@ -172,6 +175,10 @@ class Note(BaseModel):
             self.body = ''
             return
 
+        # NOTE:
+        #   There is no `from_string` method because I did not need that yet
+        #   Besides, processing from a string vs a file may have a couple of nits
+        #   See https://stackoverflow.com/questions/7472839/python-readline-from-a-string
         with open(file_path, 'r', encoding='utf-8') as f:
             # Get summary from first line
             self.title = f.readline().strip()
