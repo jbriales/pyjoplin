@@ -146,7 +146,7 @@ class Note(BaseModel):
         except Folder.DoesNotExist:
             notification.show_error("Notebook not found", message='nb id %s' % self.parent)
             raise Folder.DoesNotExist
-        return f"{self.title}\n#{notebook.title}\n{self.id}\n\n{self.body}"
+        return f"{self.id}\n{self.title}\n#{notebook.title}\n\n{self.body}"
 
     def to_file(self, file_path):
         """
@@ -180,10 +180,14 @@ class Note(BaseModel):
         #   Besides, processing from a string vs a file may have a couple of nits
         #   See https://stackoverflow.com/questions/7472839/python-readline-from-a-string
         with open(file_path, 'r', encoding='utf-8') as f:
-            # Get summary from first line
+            # Get UID from first line
+            uid_line = f.readline().strip()
+            assert uid_line == self.id
+            
+            # Get summary from second line
             self.title = f.readline().strip()
 
-            # Get notebook name from second line (must exist)
+            # Get notebook name from third line
             notebook_name_line = f.readline().strip()
             try:
                 assert notebook_name_line.startswith('#')
@@ -212,10 +216,6 @@ class Note(BaseModel):
                     "Notebook not found",
                     message='#%s\nSaving to previous notebook #%s instead' % (notebook_name, previous_notebook.title)
                 )
-
-            # Get UID from third line (must exist)
-            uid_line = f.readline().strip()
-            assert uid_line == self.id
 
             # Assert white line afterwards
             assert not f.readline().strip()
