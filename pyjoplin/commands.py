@@ -258,6 +258,9 @@ def edit(uid):
     path_tempfile = os.path.join(
         config.PATH_TEMP, f"{note.title.replace('/', '_')}.md"
     )
+    if os.path.exists(path_tempfile):
+        notification.show_error("Note file with same name is already under edit", note.title, note.id)
+        raise Exception(f"Temp file named {note.title} already exists")
 
     note.to_file(path_tempfile)
 
