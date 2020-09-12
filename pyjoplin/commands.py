@@ -333,12 +333,20 @@ def edit(uid):
         output = proc.stdout.read().decode("utf-8")
         print(output)
         notification.show_error(
-            "returncode from editor was not 0", note.title, output
+            "returncode from editor was not 0. Inspect note to sanity-check.", note.title, output
         )
         raise Exception("ERROR during edition")
 
     # Save edited file content to Notes table
     note.from_file(path_tempfile)
+
+    # Cleanup temp files
+    # NOTE:
+    # If the editor finished with some error code
+    # and things didn't go well, 
+    # we do NOT remove the sentinel.
+    # So we will get an error when trying to open the note again, showcasing the issue
+    # (even though you should have got an error notification, but just in case!)
     os.remove(path_tempfile)
     os.remove(path_sentinel)
 
