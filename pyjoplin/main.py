@@ -69,10 +69,10 @@ print_for_uid.parser.add_argument(
     help="Note's UUID"
 )
 
-find_title.parser = subparsers.add_parser(
-    'find-title', description=find_title.__doc__)
-find_title.parser.set_defaults(func=find_title)
-find_title.parser.add_argument(
+print_for_title.parser = subparsers.add_parser(
+    'find-title', description=print_for_title.__doc__)
+print_for_title.parser.set_defaults(func=print_for_title)
+print_for_title.parser.add_argument(
     'title',
     type=six.text_type,
     nargs='+',

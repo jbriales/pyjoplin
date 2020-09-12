@@ -415,18 +415,28 @@ def print_for_uid(uid):
         print(f"No note found with id {uid}")
         return 2
 
+# Basic function to abstract peewee
+# Gets UID from given title by exact match, if any
 def find_title(title):
+    try:
+        note = Note.get(Note.title == title)
+        return note.id
+    except Note.DoesNotExist:
+        return None
+
+# Util for CLI
+def print_for_title(title):
     if isinstance(title, list):
         # For case coming from CLI
         title = " ".join(title)
-    try:
-        note = Note.get(Note.title == title)
-        print(note.to_string(), end='')
+
+    uid = find_title(title)
+    if uid:
+        print_for_uid(uid)
         return 0
-    except Note.DoesNotExist:
+    else:
         print("No exact match found for title query " + title)
         return 2
-
 
 def edit_by_title(title):
     if isinstance(title, list):
