@@ -23,6 +23,7 @@
 'open-source' 'opensource'
 'pandas' 'pd'
 'Pangolin' 'pango'
+'plantUML' 'puml'
 'plot' 'plt'
 'python' 'py'
 'random' 'rand' 'rnd'
