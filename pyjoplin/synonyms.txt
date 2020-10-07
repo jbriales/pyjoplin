@@ -27,6 +27,7 @@
 'plot' 'plt'
 'python' 'py'
 'random' 'rand' 'rnd'
+'Readline' 'rl'
 'statistics' 'stats' 'stat'
 'switzerland' 'swiss'
 'tex' 'latex'
