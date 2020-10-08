@@ -156,7 +156,15 @@ class Note(BaseModel):
                 "Notebook not found", message="nb id %s" % self.parent
             )
             raise Folder.DoesNotExist
-        return f"{self.id}\n{self.title}\n#{notebook.title}\n\n{self.body}"
+        dates_line = (
+            f"mtime={datetime.utcfromtimestamp(self.updated_time/1000).strftime('%Y-%m-%d')}\t"
+            f"ctime={datetime.utcfromtimestamp(self.created_time/1000).strftime('%Y-%m-%d')}\t"
+            f"user_mtime={datetime.utcfromtimestamp(self.user_updated_time/1000).strftime('%Y-%m-%d')}\t"
+            f"user_ctime={datetime.utcfromtimestamp(self.user_created_time/1000).strftime('%Y-%m-%d')}"
+        )
+        return (
+            f"{self.id}\n{self.title}\n#{notebook.title}\n{dates_line}\n\n{self.body}"
+        )
 
     def to_file(self, file_path):
         """
@@ -228,6 +236,9 @@ class Note(BaseModel):
                     message="#%s\nSaving to previous notebook #%s instead"
                     % (notebook_name, previous_notebook.title),
                 )
+
+            # Strip dates line
+            f.readline()
 
             # Assert white line afterwards
             assert not f.readline().strip()
