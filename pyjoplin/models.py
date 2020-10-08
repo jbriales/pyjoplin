@@ -2,6 +2,8 @@ from io import open  # Unicode compatibility via default utf-8 encoding
 import os
 import time
 import traceback
+from datetime import datetime
+
 
 from peewee import *
 from playhouse.sqlite_ext import *
@@ -10,12 +12,13 @@ from pyjoplin.configuration import config
 from pyjoplin.utils import time_joplin
 
 
-path_database = os.path.expanduser('~/.config/joplin/database.sqlite')
+path_database = os.path.expanduser("~/.config/joplin/database.sqlite")
 database = SqliteExtDatabase(path_database, **{})
 
 
 class UnknownField(object):
-    def __init__(self, *_, **__): pass
+    def __init__(self, *_, **__):
+        pass
 
 
 class BaseModel(Model):
@@ -24,46 +27,46 @@ class BaseModel(Model):
 
 
 class Alarms(BaseModel):
-    note = TextField(column_name='note_id', index=True)
+    note = TextField(column_name="note_id", index=True)
     trigger_time = IntegerField()
 
     class Meta:
-        table_name = 'alarms'
+        table_name = "alarms"
 
 
 class DeletedItems(BaseModel):
     deleted_time = IntegerField()
-    item = TextField(column_name='item_id')
+    item = TextField(column_name="item_id")
     item_type = IntegerField()
     sync_target = IntegerField(index=True)
 
     class Meta:
-        table_name = 'deleted_items'
+        table_name = "deleted_items"
 
 
 class Folder(BaseModel):
     created_time = IntegerField()
     encryption_applied = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
-    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '""'")])
+    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '" "'")])
     id = TextField(null=True, primary_key=True)
-    parent = TextField(column_name='parent_id', constraints=[SQL("DEFAULT '""'")])
-    title = TextField(constraints=[SQL("DEFAULT '""'")], index=True)
+    parent = TextField(column_name="parent_id", constraints=[SQL("DEFAULT '" "'")])
+    title = TextField(constraints=[SQL("DEFAULT '" "'")], index=True)
     updated_time = IntegerField(index=True)
     user_created_time = IntegerField(constraints=[SQL("DEFAULT 0")])
     user_updated_time = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
 
     class Meta:
-        table_name = 'folders'
+        table_name = "folders"
 
 
 class ItemChanges(BaseModel):
     created_time = IntegerField(index=True)
-    item = TextField(column_name='item_id', index=True)
+    item = TextField(column_name="item_id", index=True)
     item_type = IntegerField(index=True)
     type = IntegerField()
 
     class Meta:
-        table_name = 'item_changes'
+        table_name = "item_changes"
 
 
 class MasterKeys(BaseModel):
@@ -76,53 +79,53 @@ class MasterKeys(BaseModel):
     updated_time = IntegerField()
 
     class Meta:
-        table_name = 'master_keys'
+        table_name = "master_keys"
 
 
 class NoteResources(BaseModel):
     is_associated = IntegerField()
     last_seen_time = IntegerField()
-    note = TextField(column_name='note_id', index=True)
-    resource = TextField(column_name='resource_id', index=True)
+    note = TextField(column_name="note_id", index=True)
+    resource = TextField(column_name="resource_id", index=True)
 
     class Meta:
-        table_name = 'note_resources'
+        table_name = "note_resources"
 
 
 class NoteTags(BaseModel):
     created_time = IntegerField()
     encryption_applied = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
-    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '""'")])
+    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '" "'")])
     id = TextField(null=True, primary_key=True)
-    note = TextField(column_name='note_id', index=True)
-    tag = TextField(column_name='tag_id', index=True)
+    note = TextField(column_name="note_id", index=True)
+    tag = TextField(column_name="tag_id", index=True)
     updated_time = IntegerField(index=True)
     user_created_time = IntegerField(constraints=[SQL("DEFAULT 0")])
     user_updated_time = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
 
     class Meta:
-        table_name = 'note_tags'
+        table_name = "note_tags"
 
 
 class Note(BaseModel):
     # altitude = UnknownField(constraints=[SQL("DEFAULT 0")])  # NUMERIC
-    application_data = TextField(constraints=[SQL("DEFAULT '""'")])
-    author = TextField(constraints=[SQL("DEFAULT '""'")])
-    body = TextField(constraints=[SQL("DEFAULT '""'")])
+    application_data = TextField(constraints=[SQL("DEFAULT '" "'")])
+    author = TextField(constraints=[SQL("DEFAULT '" "'")])
+    body = TextField(constraints=[SQL("DEFAULT '" "'")])
     created_time = IntegerField()
     encryption_applied = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
-    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '""'")])
+    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '" "'")])
     id = TextField(null=True, primary_key=True)
     is_conflict = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
     is_todo = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
     # latitude = UnknownField(constraints=[SQL("DEFAULT 0")])  # NUMERIC
     # longitude = UnknownField(constraints=[SQL("DEFAULT 0")])  # NUMERIC
     order = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
-    parent = TextField(column_name='parent_id', constraints=[SQL("DEFAULT '""'")])
-    source = TextField(constraints=[SQL("DEFAULT '""'")])
-    source_application = TextField(constraints=[SQL("DEFAULT '""'")])
-    source_url = TextField(constraints=[SQL("DEFAULT '""'")])
-    title = TextField(constraints=[SQL("DEFAULT '""'")], index=True)
+    parent = TextField(column_name="parent_id", constraints=[SQL("DEFAULT '" "'")])
+    source = TextField(constraints=[SQL("DEFAULT '" "'")])
+    source_application = TextField(constraints=[SQL("DEFAULT '" "'")])
+    source_url = TextField(constraints=[SQL("DEFAULT '" "'")])
+    title = TextField(constraints=[SQL("DEFAULT '" "'")], index=True)
     todo_completed = IntegerField(constraints=[SQL("DEFAULT 0")])
     todo_due = IntegerField(constraints=[SQL("DEFAULT 0")])
     updated_time = IntegerField(index=True)
@@ -131,20 +134,27 @@ class Note(BaseModel):
 
     def __repr__(self):
         if self.body:
-            repr_body = '...'
+            repr_body = "..."
         else:
             repr_body = None
         if self.parent:
             repr_notebook = Folder.get(Folder.id == self.parent).title
         else:
             repr_notebook = None
-        return "Note: %s, nb: %s, title: %s, body: %s" % (self.id, repr_notebook, self.title, repr_body)
+        return "Note: %s, nb: %s, title: %s, body: %s" % (
+            self.id,
+            repr_notebook,
+            self.title,
+            repr_body,
+        )
 
     def to_string(self):
         try:
             notebook = Folder.get(Folder.id == self.parent)
         except Folder.DoesNotExist:
-            notification.show_error("Notebook not found", message='nb id %s' % self.parent)
+            notification.show_error(
+                "Notebook not found", message="nb id %s" % self.parent
+            )
             raise Folder.DoesNotExist
         return f"{self.id}\n{self.title}\n#{notebook.title}\n\n{self.body}"
 
@@ -154,7 +164,7 @@ class Note(BaseModel):
         :param file_path:
         :return:
         """
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             f.write(self.to_string())
 
     def from_file(self, file_path):
@@ -171,30 +181,30 @@ class Note(BaseModel):
         if os.path.getsize(file_path) <= 1:
             # The file is empty, should trigger removal
             # NOTE: I don't remember now how removal worked, so trying the below
-            self.title = ''
-            self.body = ''
+            self.title = ""
+            self.body = ""
             return
 
         # NOTE:
         #   There is no `from_string` method because I did not need that yet
         #   Besides, processing from a string vs a file may have a couple of nits
         #   See https://stackoverflow.com/questions/7472839/python-readline-from-a-string
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             # Get UID from first line
             uid_line = f.readline().strip()
             assert uid_line == self.id
-            
+
             # Get summary from second line
             self.title = f.readline().strip()
 
             # Get notebook name from third line
             notebook_name_line = f.readline().strip()
             try:
-                assert notebook_name_line.startswith('#')
+                assert notebook_name_line.startswith("#")
             except AssertionError:
                 notification.show_error(
                     "Bad notebook line format",
-                    message='Lines is: %s\nShould start with #' % notebook_name_line
+                    message="Lines is: %s\nShould start with #" % notebook_name_line,
                 )
                 raise RuntimeError("Bad notebook line format")
             notebook_name = notebook_name_line[1:]
@@ -207,14 +217,16 @@ class Note(BaseModel):
                     notification.show(
                         "Notebook changed",
                         note_title=self.title,
-                        message='Changed from #%s to #%s' % (previous_notebook.title, notebook.title)
+                        message="Changed from #%s to #%s"
+                        % (previous_notebook.title, notebook.title),
                     )
                 self.parent = notebook.id
             except Folder.DoesNotExist:
                 previous_notebook = Folder.get(Folder.id == self.parent)
                 notification.show_error(
                     "Notebook not found",
-                    message='#%s\nSaving to previous notebook #%s instead' % (notebook_name, previous_notebook.title)
+                    message="#%s\nSaving to previous notebook #%s instead"
+                    % (notebook_name, previous_notebook.title),
                 )
 
             # Assert white line afterwards
@@ -243,16 +255,19 @@ class Note(BaseModel):
         NoteIndex.remove_note(self)
         try:
             # Register item deletion to be synced
-            deletion_item = DeletedItems.create(deleted_time=time_joplin(), item=self.id, item_type=1, sync_target=7)
+            deletion_item = DeletedItems.create(
+                deleted_time=time_joplin(), item=self.id, item_type=1, sync_target=7
+            )
         except:
             notification.show_error(
                 "DeletedItems table",
-                message='Creating deletion item for Dropbox sync\nNote: %s' % (self.title)
+                message="Creating deletion item for Dropbox sync\nNote: %s"
+                % (self.title),
             )
         return super(Note, self).delete_instance(*args, **kwargs)
 
     class Meta:
-        table_name = 'notes'
+        table_name = "notes"
 
 
 class NoteIndex(FTSModel):
@@ -269,10 +284,11 @@ class NoteIndex(FTSModel):
         except NoteIndex.DoesNotExist:
             NoteIndex.create(uid=note.id, title=note.title, body=note.body)
         else:
-            (NoteIndex
-                .update(title=note.title, body=note.body)
+            (
+                NoteIndex.update(title=note.title, body=note.body)
                 .where(NoteIndex.uid == note.id)
-                .execute())
+                .execute()
+            )
 
     @classmethod
     def remove_note(cls, note):
@@ -283,28 +299,28 @@ class NoteIndex(FTSModel):
             pass
 
     class Meta:
-        table_name = 'notes_pyjoplin_index'
+        table_name = "notes_pyjoplin_index"
         database = database
         # Use the porter stemming algorithm to tokenize content.
-        options = {'tokenize': 'porter'}
+        options = {"tokenize": "porter"}
 
 
 class Resources(BaseModel):
     created_time = IntegerField()
     encryption_applied = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
     encryption_blob_encrypted = IntegerField(constraints=[SQL("DEFAULT 0")])
-    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '""'")])
-    file_extension = TextField(constraints=[SQL("DEFAULT '""'")])
-    filename = TextField(constraints=[SQL("DEFAULT '""'")])
+    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '" "'")])
+    file_extension = TextField(constraints=[SQL("DEFAULT '" "'")])
+    filename = TextField(constraints=[SQL("DEFAULT '" "'")])
     id = TextField(null=True, primary_key=True)
     mime = TextField()
-    title = TextField(constraints=[SQL("DEFAULT '""'")], index=True)
+    title = TextField(constraints=[SQL("DEFAULT '" "'")], index=True)
     updated_time = IntegerField(index=True)
     user_created_time = IntegerField(constraints=[SQL("DEFAULT 0")])
     user_updated_time = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
 
     class Meta:
-        table_name = 'resources'
+        table_name = "resources"
 
 
 class Settings(BaseModel):
@@ -312,7 +328,8 @@ class Settings(BaseModel):
     value = TextField(null=True)
 
     class Meta:
-        table_name = 'settings'
+        table_name = "settings"
+
 
 # class SqliteSequence(BaseModel):
 #     name = UnknownField(null=True)  #
@@ -325,15 +342,15 @@ class Settings(BaseModel):
 
 class SyncItems(BaseModel):
     force_sync = IntegerField(constraints=[SQL("DEFAULT 0")])
-    item = TextField(column_name='item_id', index=True)
+    item = TextField(column_name="item_id", index=True)
     item_type = IntegerField(index=True)
     # sync_disabled = IntegerField(constraints=[SQL("DEFAULT "0"")])
-    sync_disabled_reason = TextField(constraints=[SQL("DEFAULT '""'")])
+    sync_disabled_reason = TextField(constraints=[SQL("DEFAULT '" "'")])
     sync_target = IntegerField(index=True)
     sync_time = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
 
     class Meta:
-        table_name = 'sync_items'
+        table_name = "sync_items"
 
 
 class TableFields(BaseModel):
@@ -343,27 +360,26 @@ class TableFields(BaseModel):
     table_name = TextField()
 
     class Meta:
-        table_name = 'table_fields'
+        table_name = "table_fields"
 
 
 class Tags(BaseModel):
     created_time = IntegerField()
     encryption_applied = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
-    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '""'")])
+    encryption_cipher_text = TextField(constraints=[SQL("DEFAULT '" "'")])
     id = TextField(null=True, primary_key=True)
-    title = TextField(constraints=[SQL("DEFAULT '""'")], index=True)
+    title = TextField(constraints=[SQL("DEFAULT '" "'")], index=True)
     updated_time = IntegerField(index=True)
     user_created_time = IntegerField(constraints=[SQL("DEFAULT 0")])
     user_updated_time = IntegerField(constraints=[SQL("DEFAULT 0")], index=True)
 
     class Meta:
-        table_name = 'tags'
+        table_name = "tags"
 
 
 class Version(BaseModel):
     version = IntegerField()
 
     class Meta:
-        table_name = 'version'
+        table_name = "version"
         primary_key = False
-
