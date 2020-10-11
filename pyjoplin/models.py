@@ -157,8 +157,8 @@ class Note(BaseModel):
             )
             raise Folder.DoesNotExist
         dates_line = (
-            f"mtime={datetime.utcfromtimestamp(self.updated_time/1000).strftime('%Y-%m-%d')}\n"
-            f"ctime={datetime.utcfromtimestamp(self.created_time/1000).strftime('%Y-%m-%d')}"
+            f"mdate={datetime.utcfromtimestamp(self.updated_time/1000).strftime('%Y-%m-%d')}\n"
+            f"cdate={datetime.utcfromtimestamp(self.created_time/1000).strftime('%Y-%m-%d')}"
         )
         return (
             f"{self.id}\n{self.title}\n#{notebook.title}\n{dates_line}\n\n{self.body}"
