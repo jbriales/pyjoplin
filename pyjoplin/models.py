@@ -157,10 +157,8 @@ class Note(BaseModel):
             )
             raise Folder.DoesNotExist
         dates_line = (
-            f"mtime={datetime.utcfromtimestamp(self.updated_time/1000).strftime('%Y-%m-%d')}\t"
-            f"ctime={datetime.utcfromtimestamp(self.created_time/1000).strftime('%Y-%m-%d')}\t"
-            f"user_mtime={datetime.utcfromtimestamp(self.user_updated_time/1000).strftime('%Y-%m-%d')}\t"
-            f"user_ctime={datetime.utcfromtimestamp(self.user_created_time/1000).strftime('%Y-%m-%d')}"
+            f"mtime={datetime.utcfromtimestamp(self.updated_time/1000).strftime('%Y-%m-%d')}\n"
+            f"ctime={datetime.utcfromtimestamp(self.created_time/1000).strftime('%Y-%m-%d')}"
         )
         return (
             f"{self.id}\n{self.title}\n#{notebook.title}\n{dates_line}\n\n{self.body}"
@@ -238,7 +236,8 @@ class Note(BaseModel):
                 )
 
             # Strip dates line
-            f.readline()
+            f.readline()  # mdate
+            f.readline()  # cdate
 
             # Assert white line afterwards
             assert not f.readline().strip()
