@@ -19,6 +19,7 @@
 'implementation' 'impl'
 'Markdown' 'md'
 'matplotlib' 'mpl'
+'notebook' 'nb'
 'numpy' 'np'
 'open-source' 'opensource'
 'pandas' 'pd'
