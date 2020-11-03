@@ -1,5 +1,6 @@
 'analytics' 'anal'
 'application' 'app'
+'background' 'bg'
 'bash' 'shell' 'terminal' 'command line'
 'benchmark' 'bench'
 'BetterCalib' 'bc'
