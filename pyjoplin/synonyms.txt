@@ -25,6 +25,7 @@
 'open-source' 'opensource'
 'pandas' 'pd'
 'Pangolin' 'pango'
+'password' 'pass'
 'plantUML' 'puml'
 'plot' 'plt'
 'python' 'py'
