@@ -20,6 +20,7 @@
 'implementation' 'impl'
 'Markdown' 'md'
 'matplotlib' 'mpl'
+'NetworkX' 'nx'
 'notebook' 'nb'
 'numpy' 'np'
 'open-source' 'opensource'
