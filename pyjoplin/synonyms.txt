@@ -15,6 +15,7 @@
 'evaluation' 'eval'
 'F32' 'Fedora32' 'Fedora 32'
 'forecast' 'prediction'
+'graphviz' 'gv'
 'guidelines' 'gl'
 'help' 'support' 'contact'
 'implementation' 'impl'
