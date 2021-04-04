@@ -40,6 +40,7 @@
 'tex' 'latex'
 'visualization' 'vis' 'viz'
 'vsc' 'VSCode' 'Visual Studio Code'
+'webapp' 'web-app' 'web app'
 'webpage' 'web page' 'web-page'
 'wi' 'whereis' 'where is'
 'worklog' 'wl'
