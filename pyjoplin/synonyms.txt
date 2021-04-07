@@ -23,6 +23,7 @@
 'Markdown' 'md'
 'matplotlib' 'mpl'
 'NetworkX' 'nx'
+'nodejs' 'Node.js'
 'notebook' 'nb'
 'numpy' 'np'
 'open-source' 'opensource'
