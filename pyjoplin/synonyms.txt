@@ -1,5 +1,6 @@
 'analytics' 'anal'
 'application' 'app'
+'auth' 'authentication'
 'background' 'bg'
 'bash' 'shell' 'terminal' 'command line'
 'benchmark' 'bench'
