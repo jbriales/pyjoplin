@@ -30,7 +30,7 @@ function append_to_history() {
 
 declare -A map_key_action
 
-# Just continue search
+# Just continue/refresh search
 # NOTE: The space has to be inserted again because the --expect in fzf intercepts it
 map_key_action[space]=add_space_to_query
 function add_space_to_query (){
