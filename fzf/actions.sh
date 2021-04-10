@@ -6,6 +6,28 @@
 # - exit script
 # Because of these are NOT subshell-functions
 
+
+#---
+# Helper logic
+# Similar logic to that in Code/python/ulauncher-joplin/history.py (append)
+function append_to_history() {
+  local MAX_NUM_ENTRIES_MINUS_ONE=29
+  # NOTE: Currently if opened via ulauncher (15) will crop a longer list?
+  local uid=$1
+  if [[ -e "$PATH_HISTORY" ]]; then
+    # Remove uid if it already exists
+    sed -i "/$uid/c\\" $PATH_HISTORY
+    # Update history file with newest MAX_NUM_ENTRIES_MINUS_ONE elems and new one
+    # NOTE: It seems tail has to be redirected to a different file or result is empty (pipe behavior?)
+    tail -n $MAX_NUM_ENTRIES_MINUS_ONE $PATH_HISTORY > $PATH_HISTORY.temp
+  fi
+  # Add latest id
+  echo $uid >> $PATH_HISTORY.temp
+  mv $PATH_HISTORY.temp $PATH_HISTORY
+}
+#---
+
+
 declare -A map_key_action
 
 # Just continue search
