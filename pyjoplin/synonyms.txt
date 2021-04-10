@@ -21,6 +21,7 @@
 'guidelines' 'gl'
 'help' 'support' 'contact'
 'implementation' 'impl'
+'js' 'javascript'
 'Markdown' 'md'
 'matplotlib' 'mpl'
 'NetworkX' 'nx'
