@@ -32,6 +32,7 @@
 'pandas' 'pd'
 'Pangolin' 'pango'
 'password' 'pass'
+'pdb' 'pouchdb'
 'plantUML' 'puml'
 'plot' 'plt'
 'python' 'py'
