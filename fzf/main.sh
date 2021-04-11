@@ -25,7 +25,10 @@ function print_query_results ()(
   # TODO: Debug why not always working?
 )
 
-cmd_preview='pyjoplin find-title $(echo {} | sed -e "s| @@@.*||") | highlight -O ansi --syntax md'
+function preview (){
+  pyjoplin find-title $(echo {} | sed -e "s| @@@.*||") | highlight -O ansi --syntax md
+}
+cmd_preview="$(type preview | tail -n +3)"
 # NOTE: Removing hacky suffix for passing preview title to search
 
 
