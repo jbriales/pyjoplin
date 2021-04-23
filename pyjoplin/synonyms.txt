@@ -24,6 +24,7 @@
 'js' 'javascript' 'nodejs'
 'Markdown' 'md'
 'matplotlib' 'mpl'
+'m' 'Marvin'
 'NetworkX' 'nx'
 'nodejs' 'Node.js' 'node' 'js'
 'notebook' 'nb'
