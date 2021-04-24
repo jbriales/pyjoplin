@@ -28,6 +28,7 @@
 'NetworkX' 'nx'
 'nodejs' 'Node.js' 'node' 'js'
 'notebook' 'nb'
+'number' 'num' 'nr'
 'numpy' 'np'
 'open-source' 'opensource'
 'pandas' 'pd'
