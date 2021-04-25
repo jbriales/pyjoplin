@@ -23,6 +23,7 @@
 'implementation' 'impl'
 'js' 'javascript' 'nodejs'
 'Markdown' 'md'
+'MarvinFzf' 'mfzf'
 'matplotlib' 'mpl'
 'm' 'Marvin'
 'NetworkX' 'nx'
