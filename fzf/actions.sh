@@ -66,14 +66,14 @@ function create_new_note_and_stop_fzf (){
 
 map_key_action[ctrl-p]=copy_note_name
 function copy_note_name (){
-  title="$(sed -e "s|\s*@@@.*||" <<<"${result}")"  # Cleanup hacky addition in result
+  title="$(awk -F '\x1F' '{print $1}' <<<"${result}")"  # Cleanup hacky addition in result
   $HOME/.dotfiles/bin/notify-send-and-xclip.sh "$title"
 }
 
 map_key_action[ctrl-l]=copy_note_hyperlink
 function copy_note_hyperlink (){
   # Copy note hyperlink
-  title="$(sed -e "s|\s*@@@.*||" <<<"${result}")"  # Cleanup hacky addition in result
+  title="$(awk -F '\x1F' '{print $1}' <<<"${result}")"  # Cleanup hacky addition in result
   uid="$(pyjoplin find-title "$title" | head -1)"
   hyperlink="[$title](joplin://$uid)"
   $HOME/.dotfiles/bin/notify-send-and-xclip.sh "$hyperlink"
@@ -82,7 +82,7 @@ function copy_note_hyperlink (){
 map_key_action[ctrl-s]=run_imfeelinglucky
 function run_imfeelinglucky (){
   # Run 'Imfeelinglucky' on selection
-  title="$(sed -e "s|\s*@@@.*||" <<<"${result}")"  # Cleanup hacky addition in result
+  title="$(awk -F '\x1F' '{print $1}' <<<"${result}")"  # Cleanup hacky addition in result
   uid=$(pyjoplin find-title "$title" | head -n 1)
   pyjoplin imfeelinglucky $uid
 }
@@ -99,7 +99,7 @@ map_key_action[ctrl-t]=copy_note_title
 function copy_note_title (){
   # Copy note title
   # Using ctrl-t and not ctrl-0 because ctrl-NR not available
-  title="$(sed -e "s|\s*@@@.*||" <<<"${result}")"  # Cleanup hacky addition in result
+  title="$(awk -F '\x1F' '{print $1}' <<<"${result}")"  # Cleanup hacky addition in result
   $HOME/.dotfiles/bin/notify-send-and-xclip.sh "$title"
 }
 
@@ -111,7 +111,7 @@ function refresh_theme (){
 map_key_action[alt-enter]=open_note
 function open_note (){
   # Open note
-  title="$(sed -e "s|\s*@@@.*||" <<<"${result}")"  # Cleanup hacky addition in result
+  title="$(awk -F '\x1F' '{print $1}' <<<"${result}")"  # Cleanup hacky addition in result
   if [ -z "$title" ]; then
     notify-send "ERROR pyjoplin-fzf" \
       'Tried to open note with empty title'
