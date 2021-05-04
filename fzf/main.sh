@@ -28,7 +28,7 @@ function print_query_results ()(
 function preview (){
   pyjoplin find-title {1} | highlight -O ansi --syntax md
 }
-cmd_preview="$(type preview | tail -n +3)"
+export CMD_PREVIEW="$(type preview | tail -n +3)"
 # NOTE: Removing hacky suffix for passing preview title to search
 
 
