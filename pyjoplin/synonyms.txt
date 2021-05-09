@@ -10,6 +10,7 @@
 'calibration' 'calib' 'cal'
 'cheatsheet' 'cs'
 'communications' 'share'
+'d3js' 'd3.js'
 'development' 'devel' 'dev'
 'dictionary' 'dict'
 'document' 'doc'
