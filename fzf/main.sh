@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-trap 'printf "\x1b[J"' EXIT
-
 PATH_HISTORY="$HOME/.cache/ulauncher-joplin/history"
 mkdir -p "$(dirname $PATH_HISTORY)"
 LOGFILE=~/log/pyjoplin-fzf/$(date '+%Y_%m_%d-%H_%M_%S')
