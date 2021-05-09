@@ -26,6 +26,7 @@
 'marvinc' 'mc'
 'marvind' 'md'
 'matplotlib' 'mpl'
+'mcli' 'MarvinCli'
 'mf' 'mfzf' 'MarvinFzf'
 'm' 'Marvin'
 'NetworkX' 'nx'
