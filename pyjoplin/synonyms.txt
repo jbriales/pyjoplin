@@ -29,6 +29,7 @@
 'matplotlib' 'mpl'
 'mcli' 'MarvinCli'
 'mf' 'mfzf' 'MarvinFzf'
+'mi3' 'MarvinI3' 'marvin-i3'
 'm' 'Marvin'
 'NetworkX' 'nx'
 'nodejs' 'Node.js' 'node' 'js'
