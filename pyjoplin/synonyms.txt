@@ -31,6 +31,7 @@
 'mf' 'mfzf' 'MarvinFzf'
 'mi3' 'MarvinI3' 'marvin-i3'
 'm' 'Marvin'
+'mvim' 'MarvinVim' 'Marvin vim'
 'NetworkX' 'nx'
 'nodejs' 'Node.js' 'node' 'js'
 'notebook' 'nb'
