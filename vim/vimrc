@@ -1,0 +1,27 @@
+"TODO
+" vimrc file to start `vim` with when using within pyjoplin scope
+
+source ~/Code/python/pyjoplin/vim/mapping.vim
+
+" TODO: Move to more specific scope for HDB notes
+source ~/Code/python/pyjoplin/vim/hdb.vim
+
+
+" Generate TOC on start
+function! TocAndReturn()
+  Toc
+  " Switch to the other window
+  execute("normal \<C-w>w")
+endfunction
+autocmd VimEnter *.md call TocAndReturn()
+
+
+" Update vim window title on save for Joplin notes
+" Only for pyjoplin notes in right path
+autocmd BufWritePost *tmp/pyjoplin/*.md
+  \ let &titlestring = GetJoplinTitle() . " (pyjoplin-VIM)"
+
+
+" Put Joplin hyperlink in secondary X clipboard selection
+autocmd VimLeave *tmp/pyjoplin/*.md
+  \ execute "!echo '" . GetJoplinHyperlink() . "' > ~/.cache/clipboard"
