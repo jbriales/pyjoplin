@@ -1,5 +1,6 @@
 'analytics' 'anal'
 'application' 'app'
+'au' 'autocmd'
 'auth' 'authentication'
 'background' 'bg'
 'bash' 'shell' 'terminal' 'command line'
