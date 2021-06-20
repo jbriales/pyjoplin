@@ -5,6 +5,14 @@ from pyjoplin import commands
 from pyjoplin.models import Note, NoteIndex, Folder
 
 
+def generate_random_word(N):
+    # TODO: Cleanup (keep here as a hack until I move this to its own file)
+    import string
+    import random
+
+    return "".join(random.choices(string.ascii_lowercase, k=N))
+
+
 class TestSearchAliases(unittest.TestCase):
     def test_alias_only_found_after_space(self):
         reference_str = "at: foo"
@@ -23,7 +31,7 @@ class TestNoteSearch(unittest.TestCase):
 
     def test_note_search_single_word(self):
         test_title = "pyjoplin-test test_note_search_single_word"
-        test_query = "asdfghjkl"
+        test_query = generate_random_word(30)
         test_body = (
             u"""
             This is a %s word
@@ -39,7 +47,7 @@ class TestNoteSearch(unittest.TestCase):
         self.assertEqual(len(found_index_notes), 1)
 
     def test_note_search_with_title_alias(self):
-        test_query = "asdfghjkl"
+        test_query = generate_random_word(30)
         # Create note that should be found
         note_id = commands.new(
             "test_pyjoplin test_note_search_with_title_alias %s" % test_query,
