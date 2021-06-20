@@ -92,7 +92,7 @@ rename_conflicting_notes.parser = subparsers.add_parser(
 rename_conflicting_notes.parser.set_defaults(func=rename_conflicting_notes)
 
 
-def cli_search(search_str):
+def cli_search(search_str, fields, delimiter):
     """
     Search input query into FTS tables in Joplin database
     Prints titles for matching notes
@@ -102,6 +102,10 @@ def cli_search(search_str):
     if isinstance(search_str, list):
         # For case coming from CLI
         search_str = " ".join(search_str)
+    if not isinstance(fields, list):
+        # For case coming from CLI, via CSV-like option
+        # e.g. `--fields=id,title`
+        fields = fields.split(",")
 
     if not search_str:
         return  # no-op
@@ -111,12 +115,24 @@ def cli_search(search_str):
         raise Exception("No notes found")
     else:
         for idx, note in enumerate(found_notes):
-            print(note["title"])
+            print(delimiter.join([note[field] for field in fields]))
 
 
 cli_search.parser = subparsers.add_parser("search", description=cli_search.__doc__)
 cli_search.parser.add_argument(
     "search_str", type=six.text_type, nargs="*", help="The query for the FTS search."
+)
+cli_search.parser.add_argument(
+    "--fields",
+    type=six.text_type,
+    default="title",
+    help="The (comma-separated) fields to include in the output line.",
+)
+cli_search.parser.add_argument(
+    "--delimiter",
+    type=six.text_type,
+    default="\x1F",
+    help="The (comma-separated) fields to include in the output line.",
 )
 cli_search.parser.set_defaults(func=cli_search)
 
