@@ -25,6 +25,7 @@ else:
         print("Skipping notify2 setup because notifications service seems broken")
         print("Do `touch ~/var/pyjoplin/SKIP_NOTIFICATIONS` to disable notifications")
 
+
 def create_notification(summary, note_title="", message=""):
     if note_title:
         full_message = "Note: %s\n%s" % (note_title, message)
@@ -35,12 +36,14 @@ def create_notification(summary, note_title="", message=""):
     )
     return notification
 
+
 def show(summary, note_title="", message=""):
     notification = create_notification(summary, note_title, message)
     try:
         notification.show()
     except notify2.UninittedError:
         print("Skipping notification because notify2.init() was not run successfully")
+
 
 def show_error(summary, note_title="", message=""):
     notification = create_notification(summary, note_title, message)
@@ -49,6 +52,7 @@ def show_error(summary, note_title="", message=""):
         notification.show()
     except notify2.UninittedError:
         print("Skipping notification because notify2.init() was not run successfully")
+
 
 def show_error_and_raise(summary, note_title="", message=""):
     show_error(summary, note_title, message)

@@ -12,7 +12,7 @@ class Config:
     PATH_CONFIG = os.path.expanduser("~/.config/pyjoplin/")
     PATH_TEMP = os.path.expanduser("~/tmp/pyjoplin/")
     # Files
-    PATH_ICON = resource_filename('pyjoplin', 'images/pyjoplin-64.png')
+    PATH_ICON = resource_filename("pyjoplin", "images/pyjoplin-64.png")
 
     # Define template for inputs PATH and TITLE (optional)
     # EDITOR_CALL_TEMPLATE = 'xfce4-terminal --disable-server --title="note - {title}" -e "bash -c \"source ~/.bashrc && vim \'{path}\'\""'
@@ -25,7 +25,7 @@ class Config:
     # Use desktop notifications for pyjoplin actions
     DO_NOTIFY = True
 
-    DEFAULT_NOTEBOOK_NAME = 'personal'
+    DEFAULT_NOTEBOOK_NAME = "personal"
 
     # TODO: Use path to load/save config in file
     # Example: https://github.com/adamchainz/lifelogger/blob/master/lifelogger/config.py
@@ -42,6 +42,7 @@ class Config:
                 except OSError as exc:  # Guard against race condition
                     if exc.errno != errno.EEXIST:
                         raise
+
 
 # Create global config variable
 config = Config()

@@ -265,9 +265,7 @@ def edit(uid):
         # Create sentinel to block this note
         open(path_sentinel, "a").close()
 
-    path_tempfile = os.path.join(
-        config.PATH_TEMP, f"{note.title.replace('/', '_')}.md"
-    )
+    path_tempfile = os.path.join(config.PATH_TEMP, f"{note.title.replace('/', '_')}.md")
 
     # Create named symlink to sentinel note
     # for better readability
@@ -277,7 +275,9 @@ def edit(uid):
     try:
         os.symlink(path_sentinel, path_tempfile)
     except FileExistsError:
-        notification.show_error("Note file with same name is already under edit", note.title, note.id)
+        notification.show_error(
+            "Note file with same name is already under edit", note.title, note.id
+        )
         raise Exception(f"Temp file named {note.title} already exists")
 
     note.to_file(path_tempfile)
@@ -349,9 +349,7 @@ def edit(uid):
                 # else:
                 #     notification.show("Note saved", note.title)
     except:
-        notification.show_error(
-            "During note edition sync loop", note.title
-        )
+        notification.show_error("During note edition sync loop", note.title)
         raise Exception("ERROR during editor-database sync loop")
 
     returncode = proc.wait()
@@ -361,7 +359,9 @@ def edit(uid):
         output = proc.stdout.read().decode("utf-8")
         print(output)
         notification.show_error(
-            "returncode from editor was not 0. Inspect note to sanity-check.", note.title, output
+            "returncode from editor was not 0. Inspect note to sanity-check.",
+            note.title,
+            output,
         )
         raise Exception("ERROR during edition")
 
@@ -371,7 +371,7 @@ def edit(uid):
     # Cleanup temp files
     # NOTE:
     # If the editor finished with some error code
-    # and things didn't go well, 
+    # and things didn't go well,
     # we do NOT remove the sentinel.
     # So we will get an error when trying to open the note again, showcasing the issue
     # (even though you should have got an error notification, but just in case!)
@@ -401,6 +401,7 @@ def edit(uid):
     if config.DO_NOTIFY:
         notification.show("Note saved", note.title)
 
+
 def print_for_uid(uid):
     """
     Print note content
@@ -408,12 +409,13 @@ def print_for_uid(uid):
     :return: returncode
     """
     try:
-        note = Note.get(Note.id == uid)       
-        print(note.to_string(), end='')
+        note = Note.get(Note.id == uid)
+        print(note.to_string(), end="")
         return 0
     except Note.DoesNotExist:
         print(f"No note found with id {uid}")
         return 2
+
 
 # Basic function to abstract peewee
 # Gets UID from given title by exact match, if any
@@ -423,6 +425,7 @@ def find_title(title):
         return note.id
     except Note.DoesNotExist:
         return None
+
 
 # Util for CLI
 def print_for_title(title):
@@ -437,6 +440,7 @@ def print_for_title(title):
     else:
         print("No exact match found for title query " + title)
         return 2
+
 
 def edit_by_title(title):
     if isinstance(title, list):
