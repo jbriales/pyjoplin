@@ -104,11 +104,7 @@ def cli_search(search_str):
         search_str = " ".join(search_str)
 
     if not search_str:
-        # Special handling of empty query: Return all titles
-        # TODO: Move this to a different cli function instead, and handle switch logic from bash
-        with db.atomic():
-            for note in Note.select():
-                print(note.title.encode("utf-8"))
+        return  # no-op
 
     found_notes = search(search_str)
     if not found_notes:
