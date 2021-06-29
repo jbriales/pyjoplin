@@ -1,6 +1,9 @@
 "TODO
 " vimrc file to start `vim` with when using within pyjoplin scope
 
+" Universal settings I want to enable for any vim editor
+source ~/.dotfiles/vim/mycommonvimrc
+
 source ~/Code/python/pyjoplin/vim/mapping.vim
 
 " TODO: Move to more specific scope for HDB notes
