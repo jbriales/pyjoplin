@@ -302,7 +302,7 @@ def edit(uid):
             "-c",
             # NOTE: `stty -ixon` to disable "flow control characters" for vim-shell
             # NOTE: `unset PYTHONPATH` seems necessary for this to work when called through ulauncher extension
-            f"stty -ixon && unset PYTHONPATH && vimx -u ~/Code/python/pyjoplin/vim/vimrc '{path_tempfile}'"
+            f"stty -ixon && unset PYTHONPATH && vim -u ~/Code/python/pyjoplin/vim/vimrc '{path_tempfile}'"
             # NOTE: Version below works when called from terminal,
             # e.g. `pyjoplin edit 170b3c8de5034f7c8023a6a39f02219c`
             # but it immediately exits when called via ulauncher
