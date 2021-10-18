@@ -303,10 +303,9 @@ def edit(uid):
             "-e",
             "bash",
             "-c",
-            # NOTE: `source ~/.bashrc` is necessary to customize interactive shell for vim
-            # e.g. to disable "flow control characters"
+            # NOTE: `stty -ixon` to disable "flow control characters" for vim-shell
             # NOTE: `unset PYTHONPATH` seems necessary for this to work when called through ulauncher extension
-            "source ~/.bashrc && unset PYTHONPATH && vimx -u ~/Code/python/pyjoplin/vim/vimrc '{path}'".format(
+            "stty -ixon && unset PYTHONPATH && vimx -u ~/Code/python/pyjoplin/vim/vimrc '{path}'".format(
                 path=path_tempfile
             )
             # NOTE: Version below works when called from terminal,
