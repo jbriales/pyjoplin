@@ -297,23 +297,19 @@ def edit(uid):
         #     'bash -c "source ~/.bashrc && unset PYTHONPATH && vimx \'{path}\' || vi \'{path}\'"'.format(path=path_tempfile)
         # ],
         [
-            "urxvt256c",
-            "-title",
-            "pyjoplin - {title}".format(title=note.title),
-            "-e",
+            "run-standalone.sh",
             "bash",
             "-c",
             # NOTE: `stty -ixon` to disable "flow control characters" for vim-shell
             # NOTE: `unset PYTHONPATH` seems necessary for this to work when called through ulauncher extension
-            "stty -ixon && unset PYTHONPATH && vimx -u ~/Code/python/pyjoplin/vim/vimrc '{path}'".format(
-                path=path_tempfile
-            )
+            f"stty -ixon && unset PYTHONPATH && vimx -u ~/Code/python/pyjoplin/vim/vimrc '{path_tempfile}'"
             # NOTE: Version below works when called from terminal,
             # e.g. `pyjoplin edit 170b3c8de5034f7c8023a6a39f02219c`
             # but it immediately exits when called via ulauncher
             # 'vimx',
             # '{path}'.format(path=path_tempfile)
         ],
+        env=dict(os.environ, OPT_TITLE=f"pyjoplin - {note.title}"),
         stdout=subprocess.PIPE,
     )
     # cmd_str = config.EDITOR_CALL_TEMPLATE.format(title=note.title, path=path_tempfile)
