@@ -178,8 +178,8 @@ def main():
     func = kwargs.pop("func")
 
     try:
-        func(**kwargs)
-        sys.exit(0)
+        returncode = func(**kwargs)
+        sys.exit(returncode)
     except Exception as e:
         if hasattr(e, "message"):
             print("Finished with exception message: %s\n" % e.message, file=sys.stderr)
