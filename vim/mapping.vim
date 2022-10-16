@@ -7,10 +7,10 @@ function! GetJoplinHyperlink()
   return "[" . GetJoplinTitle() . "](" . "joplin://" . getline(1) . ")"
 endfunction
 
-nnoremap yl :let @+ = GetJoplinHyperlink()<CR>
+nnoremap fl :let @+ = GetJoplinHyperlink()<CR>
 
 " Same mapping but more conveniently located: yank-title
-nnoremap yjt :let @+ = GetJoplinTitle()<CR>
+nnoremap fjt :let @+ = GetJoplinTitle()<CR>
 
 
 " Check this note's content is synced with database
