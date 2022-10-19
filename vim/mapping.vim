@@ -8,9 +8,11 @@ function! GetJoplinHyperlink()
 endfunction
 
 nnoremap fl :let @+ = GetJoplinHyperlink()<CR>
+nnoremap yl :let @+ = GetJoplinHyperlink()<CR>
 
 " Same mapping but more conveniently located: yank-title
 nnoremap fjt :let @+ = GetJoplinTitle()<CR>
+nnoremap yjt :let @+ = GetJoplinTitle()<CR>
 
 
 " Check this note's content is synced with database
