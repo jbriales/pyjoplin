@@ -31,6 +31,7 @@ cursor.close()
 conn.close()
 
 # Compare outputs (find common)
+# diff <(/Users/jesusbriales/Code/python/pyjoplin/scripts/read_all db_new.sqlite) <(/Users/jesusbriales/Code/python/pyjoplin/scripts/read_all db_old.sqlite)
 # comm -12 <(/Users/jesusbriales/Code/python/pyjoplin/scripts/read_all db_new.sqlite) <(/Users/jesusbriales/Code/python/pyjoplin/scripts/read_all db_old.sqlite)
 # 11446 common items
 # 11478 in new
