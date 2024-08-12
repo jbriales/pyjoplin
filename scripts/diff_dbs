@@ -63,6 +63,25 @@ def ts_to_date(timestamp_ms):
     return readable_date
 
 
+def update_row(db_conn, id, title, body, updated_time):
+    try:
+        cursor = db_conn.cursor()
+        cursor.execute(
+            """
+            UPDATE notes
+            SET title = ?,
+                body = ?,
+                updated_time = ?
+            WHERE id = ?              
+            """,
+            (title, body, updated_time, id),
+        )
+        db_conn.commit()
+        cursor.close()
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+
+
 def check_and_fix_conflict(row_1, row_2) -> bool:
     updated_time_1 = row_1[5]
     updated_time_2 = row_2[5]
@@ -103,6 +122,8 @@ def check_and_fix_conflict(row_1, row_2) -> bool:
 
     if lhs != rhs:
         print(id)
+        # return  # DEBUG: just print the id (to count)
+
         diff = difflib.unified_diff(
             lhs.splitlines(),
             rhs.splitlines(),
@@ -144,25 +165,6 @@ def check_and_fix_conflict(row_1, row_2) -> bool:
         #     f.write(body_1)
         # with open(f"{id}.rhs.txt", "w") as f:
         #     f.write(body_2)
-
-
-def update_row(db_conn, id, title, body, updated_time):
-    try:
-        cursor = db_conn.cursor()
-        cursor.execute(
-            """
-            UPDATE notes
-            SET title = ?,
-                body = ?,
-                updated_time = ?
-            WHERE id = ?              
-            """,
-            (title, body, updated_time, id),
-        )
-        db_conn.commit()
-        cursor.close()
-    except sqlite3.Error as e:
-        print(f"An error occurred: {e}")
 
 
 for row_1, row_2 in generate_pairs(rows_1, rows_2):
