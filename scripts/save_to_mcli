@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+# Pass output as input file to `mc bulk-add-json`:
+# /Users/jesusbriales/Code/python/pyjoplin/scripts/save_to_mcli >joplin.json
+# marvinc bulk-add-json joplin.json
+
+import json
+import sqlite3
+import sys
+
+# path_db = args[1]
+path_db = "/Users/jesusbriales/Dropbox/backup/joplin/db.sqlite"
+conn = sqlite3.connect(path_db)
+
+# Create a cursor object to interact with the database
+cursor = conn.cursor()
+
+# Execute a SQL query to read data
+cursor.execute("SELECT * FROM notes ORDER BY id ASC")
+
+# Fetch all rows from the executed query
+rows = cursor.fetchall()
+
+JOPLIN_PROJECT_ID = "d11af4nci7nrlo2aal0r"
+
+
+def row_to_data(row):
+    id, _, title, body, created_time, updated_time, *_ = row
+    return {
+        "_id": id,
+        "joplinId_": id,
+        "parentId": JOPLIN_PROJECT_ID,  # target Joplin project in mcli
+        "db": "Tasks",
+        "title": title,
+        "note": body,
+        "createdAt": created_time,
+        "updatedAt": updated_time,
+    }
+
+
+# Iterate through the rows and print each one
+# for row in rows[:3]:
+all_rows_as_dicts = [row_to_data(row) for row in rows]
+
+json_string = json.dumps(all_rows_as_dicts)
+print(json_string)
+
+# Close the cursor and connection
+cursor.close()
+conn.close()
+
+# read all docs in Joplin DB (now consistent in old and new)
+
+# Maybe do via JSON? Easiest way to encode multiple fields
+
+# IMP: Delete after success in case we fail to do everything in a single take
