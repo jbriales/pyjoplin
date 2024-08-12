@@ -186,8 +186,10 @@ def copy_row(source_db, target_db, table_name, row_id):
         columns = get_table_schema(source_cursor, table_name)
         columns_target = get_table_schema(target_cursor, table_name)
         assert columns == columns_target
-        # idx_to_rm = columns.index("order")
-        # columns.remove("order")  # giving some issue, so ignore
+
+        # giving some issue, so ignore
+        idx_to_rm = columns.index("order")
+        del columns[idx_to_rm]
         placeholders = ", ".join("?" for _ in columns)
 
         # Fetch the row from the source database
@@ -195,6 +197,9 @@ def copy_row(source_db, target_db, table_name, row_id):
         row = source_cursor.fetchone()
 
         if row:
+            # del row[idx_to_rm]
+            row = row[:idx_to_rm] + row[idx_to_rm + 1 :]
+
             # Insert the row into the target database
             target_cursor.execute(
                 f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})",
@@ -233,20 +238,44 @@ def print_row(row):
 
 
 for row_1, row_2 in generate_pairs(rows_1, rows_2):
+    if row_1 and row_2:
+        did_change = check_and_fix_conflict(row_1, row_2)
+        continue
+
     if row_1 is None:
         print("Missing row in DB-1")
-        print_row(row_2)
-        copy_row(path_db_2, path_db_1, "notes", row_2[0])
-        input("Copied row, Continue?")
+        id = row_2[0]
+        row = row_2
+        src_db = path_db_2
+        dst_db = path_db_1
 
     if row_2 is None:
         print("Missing row in DB-2")
-        print_row(row_1)
-        copy_row(path_db_1, path_db_2, "notes", row_1[0])
-        input("Copied row, Continue?")
+        id = row_1[0]
+        row = row_1
+        src_db = path_db_1
+        dst_db = path_db_2
 
-    if row_1 and row_2:
-        did_change = check_and_fix_conflict(row_1, row_2)
+    (
+        id,
+        parent_id,
+        title,
+        body,
+        created_time,
+        updated_time,
+        *_,
+    ) = row
+
+    print()
+    print("=============================")
+    print()
+    print_row(row)
+    if title.startswith("whereis"):
+        print("Automatically copying 'whereis' note")
+    else:
+        # input("Copy row?")
+        pass
+    copy_row(src_db, dst_db, "notes", id)
 
     # print(id, parent_id, title, body, created_time, updated_time)
     # break
