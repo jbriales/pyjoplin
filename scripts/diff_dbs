@@ -7,8 +7,8 @@ import sys
 
 
 # Connect to the SQLite database (or create it if it doesn't exist)
-path_db_1 = "/Users/jesusbriales/Dropbox/backup/joplin/db_new.sqlite"
-path_db_2 = "/Users/jesusbriales/Dropbox/backup/joplin/db_old.sqlite"
+path_db_1 = "/Users/jesusbriales/Dropbox/backup/joplin/db_old.sqlite"
+path_db_2 = "/Users/jesusbriales/Dropbox/backup/joplin/db_new.sqlite"
 conn_1 = sqlite3.connect(path_db_1)
 conn_2 = sqlite3.connect(path_db_2)
 
@@ -167,7 +167,84 @@ def check_and_fix_conflict(row_1, row_2) -> bool:
         #     f.write(body_2)
 
 
+def get_table_schema(cursor, table_name):
+    cursor.execute(f"PRAGMA table_info({table_name})")
+    columns = [row[1] for row in cursor.fetchall()]
+    return columns
+
+
+def copy_row(source_db, target_db, table_name, row_id):
+    # Connect to source and target databases
+    source_conn = sqlite3.connect(source_db)
+    source_cursor = source_conn.cursor()
+
+    target_conn = sqlite3.connect(target_db)
+    target_cursor = target_conn.cursor()
+
+    try:
+        # Get table schema from the source database
+        columns = get_table_schema(source_cursor, table_name)
+        columns_target = get_table_schema(target_cursor, table_name)
+        assert columns == columns_target
+        # idx_to_rm = columns.index("order")
+        # columns.remove("order")  # giving some issue, so ignore
+        placeholders = ", ".join("?" for _ in columns)
+
+        # Fetch the row from the source database
+        source_cursor.execute(f"SELECT * FROM {table_name} WHERE id = ?", (row_id,))
+        row = source_cursor.fetchone()
+
+        if row:
+            # Insert the row into the target database
+            target_cursor.execute(
+                f"INSERT INTO {table_name} ({', '.join(columns)}) VALUES ({placeholders})",
+                row,
+            )
+            target_conn.commit()
+        else:
+            print("No row found with the specified ID.")
+
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
+
+    finally:
+        # Close connections
+        source_conn.close()
+        target_conn.close()
+
+
+def print_row(row):
+    (
+        id,
+        parent_id,
+        title,
+        body,
+        created_time,
+        updated_time,
+        *_,
+    ) = row
+    print(f"Id: {id}")
+    print(f"Title: {title}")
+    print(f"Create Date: {ts_to_date(created_time)}")
+    print(f"Update Date: {ts_to_date(updated_time)}")
+    print()
+    print()
+    print(f"{body}")
+
+
 for row_1, row_2 in generate_pairs(rows_1, rows_2):
+    if row_1 is None:
+        print("Missing row in DB-1")
+        print_row(row_2)
+        copy_row(path_db_2, path_db_1, "notes", row_2[0])
+        input("Copied row, Continue?")
+
+    if row_2 is None:
+        print("Missing row in DB-2")
+        print_row(row_1)
+        copy_row(path_db_1, path_db_2, "notes", row_1[0])
+        input("Copied row, Continue?")
+
     if row_1 and row_2:
         did_change = check_and_fix_conflict(row_1, row_2)
 
