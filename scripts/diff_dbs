@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+
+import sqlite3
+import difflib
+from datetime import datetime, timezone
+
+
+# Connect to the SQLite database (or create it if it doesn't exist)
+path_db_1 = "/Users/jesusbriales/Dropbox/backup/joplin/db_new.sqlite"
+path_db_2 = "/Users/jesusbriales/Dropbox/backup/joplin/db_old.sqlite"
+conn_1 = sqlite3.connect(path_db_1)
+conn_2 = sqlite3.connect(path_db_2)
+
+# Create a cursor object to interact with the database
+cursor_1 = conn_1.cursor()
+cursor_2 = conn_2.cursor()
+
+# Execute a SQL query to read data
+cursor_1.execute("SELECT * FROM notes ORDER BY id ASC")
+cursor_2.execute("SELECT * FROM notes ORDER BY id ASC")
+
+# Fetch all rows from the executed query
+rows_1 = iter(cursor_1.fetchall())
+rows_2 = iter(cursor_2.fetchall())
+
+
+def generate_pairs(rows_1, rows_2):
+    row_1 = next(rows_1, None)
+    row_2 = next(rows_2, None)
+
+    while True:
+        if row_1 is None and row_2 is None:
+            break
+
+        if row_1[0] < row_2[0]:
+            yield (row_1, None)
+            row_1 = next(rows_1, None)
+            continue
+
+        if row_1[0] > row_2[0]:
+            yield (None, row_2)
+            row_2 = next(rows_2, None)
+            continue
+
+        assert row_1[0] == row_2[0]
+        yield (row_1, row_2)
+        row_1 = next(rows_1, None)
+        row_2 = next(rows_2, None)
+        continue
+
+
+def ask_user_for_confirmation(prompt):
+    while True:
+        # Prompt the user and convert input to uppercase to handle 'y'/'Y' and 'n'/'N'
+        response = input(prompt).strip().upper()
+
+        # Check if the response is 'Y' or 'N'
+        if response in ["Y", "N"]:
+            return response == "Y"
+        else:
+            print("Invalid input. Please enter 'Y' or 'N'.")
+
+
+def ts_to_date(timestamp_ms):
+    # Convert milliseconds to seconds
+    timestamp_s = timestamp_ms / 1000.0
+
+    # Create a datetime object from the timestamp
+    dt = datetime.fromtimestamp(timestamp_s, tz=timezone.utc)
+
+    # Format the datetime object as a readable string
+    readable_date = dt.strftime("%Y-%m-%d %H:%M:%S %Z")
+
+    return readable_date
+
+
+def check_and_fix_conflict(row_1, row_2):
+    updated_time_1 = row_1[5]
+    updated_time_2 = row_2[5]
+    if updated_time_1 <= updated_time_2:
+        row_lhs = row_1
+        row_rhs = row_2
+    else:
+        row_lhs = row_2
+        row_rhs = row_1
+
+    (
+        id_lhs,
+        parent_id_lhs,
+        title_lhs,
+        body_lhs,
+        created_time_lhs,
+        updated_time_lhs,
+        *_,
+    ) = row_lhs
+    (
+        id_rhs,
+        parent_id_rhs,
+        title_rhs,
+        body_rhs,
+        created_time_rhs,
+        updated_time_rhs,
+        *_,
+    ) = row_rhs
+    assert id_lhs == id_rhs
+    id = id_lhs
+    assert parent_id_lhs == parent_id_rhs
+    assert created_time_lhs == created_time_rhs
+
+    lhs = title_lhs + "\n\n" + body_lhs
+    lhs_date = ts_to_date(updated_time_lhs)
+    rhs = title_rhs + "\n\n" + body_rhs
+    rhs_date = ts_to_date(updated_time_rhs)
+
+    if lhs != rhs:
+        print(id)
+        diff = difflib.unified_diff(
+            lhs.splitlines(),
+            rhs.splitlines(),
+            fromfile=f"lhs ({lhs_date})",
+            tofile=f"rhs ({rhs_date})",
+            lineterm="",
+        )
+        for line in diff:
+            print(line)
+
+        if ask_user_for_confirmation("Keep rhs?"):
+            pass
+
+        # with open(f"{id}.lhs.txt", "w") as f:
+        #     f.write(body_1)
+        # with open(f"{id}.rhs.txt", "w") as f:
+        #     f.write(body_2)
+
+
+for row_1, row_2 in generate_pairs(rows_1, rows_2):
+    if row_1 and row_2:
+        check_and_fix_conflict(row_1, row_2)
+
+    # print(id, parent_id, title, body, created_time, updated_time)
+    # break
+
+# Close the cursor and connection
+cursor_1.close()
+cursor_2.close()
+conn_1.close()
+conn_2.close()
