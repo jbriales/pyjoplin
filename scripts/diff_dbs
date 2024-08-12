@@ -3,6 +3,7 @@
 import sqlite3
 import difflib
 from datetime import datetime, timezone
+import sys
 
 
 # Connect to the SQLite database (or create it if it doesn't exist)
@@ -49,18 +50,6 @@ def generate_pairs(rows_1, rows_2):
         continue
 
 
-def ask_user_for_confirmation(prompt):
-    while True:
-        # Prompt the user and convert input to uppercase to handle 'y'/'Y' and 'n'/'N'
-        response = input(prompt).strip().upper()
-
-        # Check if the response is 'Y' or 'N'
-        if response in ["Y", "N"]:
-            return response == "Y"
-        else:
-            print("Invalid input. Please enter 'Y' or 'N'.")
-
-
 def ts_to_date(timestamp_ms):
     # Convert milliseconds to seconds
     timestamp_s = timestamp_ms / 1000.0
@@ -74,7 +63,7 @@ def ts_to_date(timestamp_ms):
     return readable_date
 
 
-def check_and_fix_conflict(row_1, row_2):
+def check_and_fix_conflict(row_1, row_2) -> bool:
     updated_time_1 = row_1[5]
     updated_time_2 = row_2[5]
     if updated_time_1 <= updated_time_2:
@@ -124,9 +113,32 @@ def check_and_fix_conflict(row_1, row_2):
         for line in diff:
             print(line)
 
-        if ask_user_for_confirmation("Keep rhs?"):
+        prompt = "Pick action: (E)xit, (S)kip, keep (R)ight, keep (L)eft"
+        response = input(prompt).strip().upper()
+
+        # Check if the response is 'Y' or 'N'
+        if response == "S":
+            return False
+
+        if response == "R":
             update_row(conn_1, id, title_rhs, body_rhs, updated_time_rhs)
             update_row(conn_2, id, title_rhs, body_rhs, updated_time_rhs)
+            return True
+
+        if response == "L":
+            update_row(conn_1, id, title_lhs, body_lhs, updated_time_lhs)
+            update_row(conn_2, id, title_lhs, body_lhs, updated_time_lhs)
+            return True
+
+        if response != "E":
+            print("Invalid input. Exiting")
+
+        # Close DBs to save changes before exit
+        cursor_1.close()
+        cursor_2.close()
+        conn_1.close()
+        conn_2.close()
+        sys.exit("Early exit")
 
         # with open(f"{id}.lhs.txt", "w") as f:
         #     f.write(body_1)
@@ -135,28 +147,35 @@ def check_and_fix_conflict(row_1, row_2):
 
 
 def update_row(db_conn, id, title, body, updated_time):
-    cursor = db_conn.cursor()
-    cursor.execute(
-        """
-        UPDATE notes
-        SET title = ?,
-            body = ?,
-            updated_time = ?
-        WHERE id = ?              
-        """,
-        (id, title, body, updated_time),
-    )
-    db_conn.commit()
+    try:
+        cursor = db_conn.cursor()
+        cursor.execute(
+            """
+            UPDATE notes
+            SET title = ?,
+                body = ?,
+                updated_time = ?
+            WHERE id = ?              
+            """,
+            (title, body, updated_time, id),
+        )
+        db_conn.commit()
+        cursor.close()
+    except sqlite3.Error as e:
+        print(f"An error occurred: {e}")
 
 
 for row_1, row_2 in generate_pairs(rows_1, rows_2):
     if row_1 and row_2:
-        check_and_fix_conflict(row_1, row_2)
+        did_change = check_and_fix_conflict(row_1, row_2)
 
     # print(id, parent_id, title, body, created_time, updated_time)
     # break
 
 # Close the cursor and connection
+conn_1.commit()
+conn_2.commit()
+
 cursor_1.close()
 cursor_2.close()
 conn_1.close()
