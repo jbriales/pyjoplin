@@ -117,20 +117,36 @@ def check_and_fix_conflict(row_1, row_2):
         diff = difflib.unified_diff(
             lhs.splitlines(),
             rhs.splitlines(),
-            fromfile=f"lhs ({lhs_date})",
-            tofile=f"rhs ({rhs_date})",
+            fromfile=f"lhs ({lhs_date}) - {title_lhs}",
+            tofile=f"rhs ({rhs_date}) - {title_rhs}",
             lineterm="",
         )
         for line in diff:
             print(line)
 
         if ask_user_for_confirmation("Keep rhs?"):
-            pass
+            update_row(conn_1, id, title_rhs, body_rhs, updated_time_rhs)
+            update_row(conn_2, id, title_rhs, body_rhs, updated_time_rhs)
 
         # with open(f"{id}.lhs.txt", "w") as f:
         #     f.write(body_1)
         # with open(f"{id}.rhs.txt", "w") as f:
         #     f.write(body_2)
+
+
+def update_row(db_conn, id, title, body, updated_time):
+    cursor = db_conn.cursor()
+    cursor.execute(
+        """
+        UPDATE notes
+        SET title = ?,
+            body = ?,
+            updated_time = ?
+        WHERE id = ?              
+        """,
+        (id, title, body, updated_time),
+    )
+    db_conn.commit()
 
 
 for row_1, row_2 in generate_pairs(rows_1, rows_2):
